@@ -127,7 +127,7 @@ public class CassandraAccountService
      * @return SongsByUserDao
      */
     public Observable<SongsByUserDao> getSongsByUser(UUID userId, String timestamp, UUID songUuid) {
-        return Observable.just(SongsByUserQuery.get(queryAccessor, mappingManager, userId, timestamp, songUuid));
+        return Observable.just(SongsByUserQuery.getUserSong(queryAccessor, mappingManager, userId, timestamp, songUuid));
     }
 
     /**
@@ -140,7 +140,7 @@ public class CassandraAccountService
      * @return com.datastax.driver.core.ResultSet
      */
     public Observable<ResultSet> getSongsByUser(UUID userId, Optional<String> timestamp, Optional<Integer> limit) {
-        return Observable.just(SongsByUserQuery.get(queryAccessor, userId, timestamp, limit));
+        return Observable.just(SongsByUserQuery.getUserSongList(queryAccessor, userId, timestamp, limit));
     }
 
     /**
@@ -204,7 +204,7 @@ public class CassandraAccountService
      * @return AlbumsByUserDao
      */
     public Observable<AlbumsByUserDao> getAlbumsByUser(UUID userId, String timestamp, UUID albumUuid) {
-        return Observable.just(AlbumsByUserQuery.get(queryAccessor, mappingManager, userId, timestamp, albumUuid));
+        return Observable.just(AlbumsByUserQuery.getUserAlbum(queryAccessor, mappingManager, userId, timestamp, albumUuid));
     }
 
     /**
@@ -217,7 +217,7 @@ public class CassandraAccountService
      * @return com.datastax.driver.core.ResultSet
      */
     public Observable<ResultSet> getAlbumsByUser(UUID userId, Optional<String> timestamp, Optional<Integer> limit) {
-        return Observable.just(AlbumsByUserQuery.get(queryAccessor, userId, timestamp, limit));
+        return Observable.just(AlbumsByUserQuery.getUserAlbumList(queryAccessor, userId, timestamp, limit));
     }
 
     /**
@@ -281,7 +281,7 @@ public class CassandraAccountService
      * @return ArtistsByUserDao
      */
     public Observable<ArtistsByUserDao> getArtistsByUser(UUID userId, String timestamp, UUID artistUuid) {
-        return Observable.just(ArtistsByUserQuery.get(queryAccessor, mappingManager, userId, timestamp, artistUuid));
+        return Observable.just(ArtistsByUserQuery.getUserArtist(queryAccessor, mappingManager, userId, timestamp, artistUuid));
     }
 
     /**
@@ -294,7 +294,7 @@ public class CassandraAccountService
      * @return com.datastax.driver.core.ResultSet
      */
     public Observable<ResultSet> getArtistsByUser(UUID userId, Optional<String> timestamp, Optional<Integer> limit) {
-        return Observable.just(ArtistsByUserQuery.get(queryAccessor, userId, timestamp, limit));
+        return Observable.just(ArtistsByUserQuery.getUserArtistList(queryAccessor, userId, timestamp, limit));
     }
 
     /**
