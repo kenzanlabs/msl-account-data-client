@@ -26,7 +26,7 @@ public class SongsByUserQuery {
      * @param songUuid java.util.UUID
      * @return SongsByUserDao
      */
-    public static SongsByUserDao get(final QueryAccessor queryAccessor, final MappingManager manager,
+    public static SongsByUserDao getUserSong(final QueryAccessor queryAccessor, final MappingManager manager,
                                      final UUID userId, final String timestamp, final UUID songUuid) {
         Result<SongsByUserDao> results = manager.mapper(SongsByUserDao.class)
             .map(queryAccessor.songsByUser(userId, new Date(Long.parseLong(timestamp)), songUuid));
@@ -43,7 +43,7 @@ public class SongsByUserQuery {
      * @param limit Integer
      * @return com.datastax.driver.core.ResultSet
      */
-    public static ResultSet get(final QueryAccessor queryAccessor, final UUID userId, final Optional<String> timestamp,
+    public static ResultSet getUserSongList(final QueryAccessor queryAccessor, final UUID userId, final Optional<String> timestamp,
                                 final Optional<Integer> limit) {
         if ( limit.isPresent() && timestamp.isPresent() ) {
             return queryAccessor.songsByUser(userId, new Date(Long.parseLong(timestamp.get())), limit.get());

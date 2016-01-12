@@ -26,7 +26,7 @@ public class AlbumsByUserQuery {
      * @param albumUuid java.util.UUID
      * @return AlbumsByUserDao
      */
-    public static AlbumsByUserDao get(final QueryAccessor queryAccessor, final MappingManager manager,
+    public static AlbumsByUserDao getUserAlbum(final QueryAccessor queryAccessor, final MappingManager manager,
                                       final UUID userId, final String timestamp, final UUID albumUuid) {
         Result<AlbumsByUserDao> results = manager.mapper(AlbumsByUserDao.class)
             .map(queryAccessor.albumsByUser(userId, new Date(Long.parseLong(timestamp)), albumUuid));
@@ -44,7 +44,7 @@ public class AlbumsByUserQuery {
      * @param limit Integer
      * @return com.datastax.driver.core.ResultSet
      */
-    public static ResultSet get(final QueryAccessor queryAccessor, final UUID userId, final Optional<String> timestamp,
+    public static ResultSet getUserAlbumList(final QueryAccessor queryAccessor, final UUID userId, final Optional<String> timestamp,
                                 final Optional<Integer> limit) {
         if ( limit.isPresent() && timestamp.isPresent() ) {
             return queryAccessor.albumsByUser(userId, new Date(Long.parseLong(timestamp.get())), limit.get());

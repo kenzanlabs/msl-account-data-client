@@ -1,0 +1,92 @@
+package com.kenzan.msl.account.client.cassandra.query;
+
+import com.datastax.driver.mapping.MappingManager;
+import com.google.common.base.Optional;
+
+import com.kenzan.msl.account.client.TestConstants;
+import com.kenzan.msl.account.client.cassandra.QueryAccessor;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+
+import java.util.Date;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+public class AlbumsByUserQueryTest {
+
+    private TestConstants tc = TestConstants.getInstance();
+    private long LONG_TIMESTAMP = tc.TIMESTAMP.getTime();
+
+    @Mock private QueryAccessor queryAccessor;
+    @Mock private MappingManager mappingManager;
+
+    @Before
+    public void init () {
+
+        queryAccessor = Mockito.mock(QueryAccessor.class);
+        when(queryAccessor.albumsByUser(tc.USER_ID, tc.TIMESTAMP, tc.ALBUM_ID))
+                .thenThrow(new RuntimeException("TEST_EXPECTED_EXCEPTION"));
+    }
+
+    @Test (expected = RuntimeException.class)
+    public void testGetAlbumsByUser () {
+        AlbumsByUserQuery.getUserAlbum(queryAccessor, mappingManager, tc.USER_ID, Long.toString(LONG_TIMESTAMP), tc.ALBUM_ID);
+    }
+
+    @Test
+    public void testGetAlbumListByUserWithTimeStampAndLimit () {
+        AlbumsByUserQuery.getUserAlbumList(queryAccessor, tc.USER_ID, Optional.of(Long.toString(LONG_TIMESTAMP)), Optional.of(tc.LIMIT));
+        verify(queryAccessor, atLeastOnce()).albumsByUser(tc.USER_ID, tc.TIMESTAMP, tc.LIMIT);
+    }
+
+    @Test
+    public void testGetAlbumListByUserWithLimit () {
+        AlbumsByUserQuery.getUserAlbumList(queryAccessor, tc.USER_ID, Optional.absent(), Optional.of(tc.LIMIT));
+        verify(queryAccessor, atLeastOnce()).albumsByUser(tc.USER_ID, tc.LIMIT);
+    }
+
+    @Test
+    public void testGetAlbumListByUserWithTimestamp () {
+        AlbumsByUserQuery.getUserAlbumList(queryAccessor, tc.USER_ID, Optional.of(Long.toString(LONG_TIMESTAMP)), Optional.absent());
+        verify(queryAccessor, atLeastOnce()).albumsByUser(tc.USER_ID, tc.TIMESTAMP);
+    }
+
+    @Test
+    public void tesGetAlbumListByUser () {
+        AlbumsByUserQuery.getUserAlbumList(queryAccessor, tc.USER_ID, Optional.absent(), Optional.absent());
+        verify(queryAccessor, atLeastOnce()).albumsByUser(tc.USER_ID);
+    }
+
+    @Test
+    public void testAddAlbumByUser () {
+        AlbumsByUserQuery.add(queryAccessor, tc.ALBUM_BY_USER_DAO);
+        verify(queryAccessor, atLeastOnce()).addLibraryAlbum(
+                eq(tc.ALBUM_BY_USER_DAO.getUserId()),
+                eq(tc.ALBUM_BY_USER_DAO.getContentType()),
+                any(Date.class),
+                eq(tc.ALBUM_BY_USER_DAO.getAlbumId()),
+                eq(tc.ALBUM_BY_USER_DAO.getAlbumName()),
+                eq(tc.ALBUM_BY_USER_DAO.getAlbumYear()),
+                eq(tc.ALBUM_BY_USER_DAO.getArtistId()),
+                eq(tc.ALBUM_BY_USER_DAO.getArtistMbid()),
+                eq(tc.ALBUM_BY_USER_DAO.getArtistName())
+        );
+    }
+
+    @Test
+    public void testRemoveAlbumByUser () {
+        AlbumsByUserQuery.remove(queryAccessor, tc.USER_ID, tc.TIMESTAMP, tc.ALBUM_ID);
+        verify(queryAccessor, atLeastOnce()).deleteLibraryAlbum(tc.ALBUM_ID, tc.TIMESTAMP, tc.USER_ID);
+    }
+
+    @Test (expected = NullPointerException.class)
+    public void testRemoveAlbumByUserException () {
+        AlbumsByUserQuery.remove(null, tc.USER_ID, tc.TIMESTAMP, tc.ALBUM_ID);
+    }
+}
