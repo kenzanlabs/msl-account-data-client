@@ -44,6 +44,7 @@
     </profiles>
 
     <build>
+        <testSourceDirectory>src/test/java</testSourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -69,6 +70,7 @@
                         <configuration>
                             <sources>
                                 <source>src/main/java</source>
+                                <source>src/test/java</source>
                             </sources>
                         </configuration>
                     </execution>
