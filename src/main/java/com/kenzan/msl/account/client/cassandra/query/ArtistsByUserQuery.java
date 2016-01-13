@@ -27,7 +27,7 @@ public class ArtistsByUserQuery {
      * @return ArtistsByUserDao
      */
     public static ArtistsByUserDao getUserArtist(final QueryAccessor queryAccessor, final MappingManager manager,
-                                       final UUID userId, final String timestamp, final UUID artistUuid) {
+                                                 final UUID userId, final String timestamp, final UUID artistUuid) {
         Result<ArtistsByUserDao> results = manager.mapper(ArtistsByUserDao.class)
             .map(queryAccessor.artistsByUser(userId, new Date(Long.parseLong(timestamp)), artistUuid));
         return results.one();
@@ -43,8 +43,8 @@ public class ArtistsByUserQuery {
      * @param limit Integer
      * @return com.datastax.driver.core.ResultSet
      */
-    public static ResultSet getUserArtistList(final QueryAccessor queryAccessor, final UUID userId, final Optional<String> timestamp,
-                                final Optional<Integer> limit) {
+    public static ResultSet getUserArtistList(final QueryAccessor queryAccessor, final UUID userId,
+                                              final Optional<String> timestamp, final Optional<Integer> limit) {
         if ( limit.isPresent() && timestamp.isPresent() ) {
             return queryAccessor.artistsByUser(userId, new Date(Long.parseLong(timestamp.get())), limit.get());
         }
@@ -66,13 +66,8 @@ public class ArtistsByUserQuery {
      * @param artist ArtistsByUserDao
      */
     public static void add(final QueryAccessor queryAccessor, final ArtistsByUserDao artist) {
-        try {
-            queryAccessor.addLibraryArtist(artist.getUserId(), "Artist", new Date(), artist.getArtistId(),
-                                           artist.getArtistMbid(), artist.getArtistName());
-        }
-        catch ( Exception error ) {
-            throw error;
-        }
+        queryAccessor.addLibraryArtist(artist.getUserId(), "Artist", new Date(), artist.getArtistId(),
+                                       artist.getArtistMbid(), artist.getArtistName());
     }
 
     /**
@@ -86,11 +81,6 @@ public class ArtistsByUserQuery {
      */
     public static void remove(final QueryAccessor queryAccessor, final UUID userId, final Date timestamp,
                               final UUID artistUuid) {
-        try {
-            queryAccessor.deleteLibraryArtist(artistUuid, timestamp, userId);
-        }
-        catch ( RuntimeErrorException err ) {
-            throw err;
-        }
+        queryAccessor.deleteLibraryArtist(artistUuid, timestamp, userId);
     }
 }

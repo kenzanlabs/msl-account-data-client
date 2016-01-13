@@ -25,35 +25,39 @@ public class ArtistsByUserQueryTest {
 
     @Mock
     private QueryAccessor queryAccessor;
-    @Mock private MappingManager mappingManager;
+    @Mock
+    private MappingManager mappingManager;
 
     @Before
-    public void init () {
+    public void init() {
         queryAccessor = Mockito.mock(QueryAccessor.class);
         when(queryAccessor.artistsByUser(tc.USER_ID, tc.TIMESTAMP, tc.ARTIST_ID))
-                .thenThrow(new RuntimeException("TEST_EXPECTED_EXCEPTION"));
+            .thenThrow(new RuntimeException("TEST_EXPECTED_EXCEPTION"));
     }
 
     @Test(expected = RuntimeException.class)
-    public void testGetArtistsByUser () {
-        ArtistsByUserQuery.getUserArtist(queryAccessor, mappingManager, tc.USER_ID, Long.toString(LONG_TIMESTAMP), tc.ARTIST_ID);
+    public void testGetArtistsByUser() {
+        ArtistsByUserQuery.getUserArtist(queryAccessor, mappingManager, tc.USER_ID, Long.toString(LONG_TIMESTAMP),
+                                         tc.ARTIST_ID);
     }
 
     @Test
-    public void testGetArtistListByUser () {
+    public void testGetArtistListByUser() {
         ArtistsByUserQuery.getUserArtistList(queryAccessor, tc.USER_ID, Optional.absent(), Optional.absent());
         verify(queryAccessor, atLeastOnce()).artistsByUser(tc.USER_ID);
     }
 
     @Test
     public void testGetArtistListByUserWithLimitAndTimestamp() {
-        ArtistsByUserQuery.getUserArtistList(queryAccessor, tc.USER_ID, Optional.of(Long.toString(LONG_TIMESTAMP)), Optional.of(tc.LIMIT));
+        ArtistsByUserQuery.getUserArtistList(queryAccessor, tc.USER_ID, Optional.of(Long.toString(LONG_TIMESTAMP)),
+                                             Optional.of(tc.LIMIT));
         verify(queryAccessor, atLeastOnce()).artistsByUser(tc.USER_ID, tc.TIMESTAMP, tc.LIMIT);
     }
 
     @Test
     public void testGetArtistListByUserWithTimestamp() {
-        ArtistsByUserQuery.getUserArtistList(queryAccessor, tc.USER_ID, Optional.of(Long.toString(LONG_TIMESTAMP)), Optional.absent());
+        ArtistsByUserQuery.getUserArtistList(queryAccessor, tc.USER_ID, Optional.of(Long.toString(LONG_TIMESTAMP)),
+                                             Optional.absent());
         verify(queryAccessor, atLeastOnce()).artistsByUser(tc.USER_ID, tc.TIMESTAMP);
     }
 
@@ -64,26 +68,28 @@ public class ArtistsByUserQueryTest {
     }
 
     @Test
-    public void testAddArtistByUser () {
+    public void testAddArtistByUser() {
         ArtistsByUserQuery.add(queryAccessor, tc.ARTIST_BY_USER_DAO);
-        verify(queryAccessor, atLeastOnce()).addLibraryArtist(
-                eq(tc.ARTIST_BY_USER_DAO.getUserId()),
-                eq(tc.ARTIST_BY_USER_DAO.getContentType()),
-                any(Date.class),
-                eq(tc.ARTIST_BY_USER_DAO.getArtistId()),
-                eq(tc.ARTIST_BY_USER_DAO.getArtistMbid()),
-                eq(tc.ARTIST_BY_USER_DAO.getArtistName())
-        );
+        verify(queryAccessor, atLeastOnce()).addLibraryArtist(eq(tc.ARTIST_BY_USER_DAO.getUserId()),
+                                                              eq(tc.ARTIST_BY_USER_DAO.getContentType()),
+                                                              any(Date.class), eq(tc.ARTIST_BY_USER_DAO.getArtistId()),
+                                                              eq(tc.ARTIST_BY_USER_DAO.getArtistMbid()),
+                                                              eq(tc.ARTIST_BY_USER_DAO.getArtistName()));
+    }
+
+    @Test(expected = Exception.class)
+    public void testAddArtistByUserException() {
+        ArtistsByUserQuery.add(null, tc.ARTIST_BY_USER_DAO);
     }
 
     @Test
-    public void testRemoveArtistByUser () {
+    public void testRemoveArtistByUser() {
         ArtistsByUserQuery.remove(queryAccessor, tc.USER_ID, tc.TIMESTAMP, tc.ARTIST_ID);
         verify(queryAccessor, atLeastOnce()).deleteLibraryArtist(tc.ARTIST_ID, tc.TIMESTAMP, tc.USER_ID);
     }
 
-    @Test (expected = NullPointerException.class)
-    public void testRemoveArtistByUserException () {
+    @Test(expected = Exception.class)
+    public void testRemoveArtistByUserException() {
         ArtistsByUserQuery.remove(null, tc.USER_ID, tc.TIMESTAMP, tc.ARTIST_ID);
     }
 }
