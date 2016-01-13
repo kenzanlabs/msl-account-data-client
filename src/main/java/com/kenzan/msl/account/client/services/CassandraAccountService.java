@@ -53,18 +53,19 @@ public class CassandraAccountService
         return instance;
     }
 
+    /*
+     * ==============================================================================================
+     * USER
+     * ==========================================================================================
+     */
+
     /**
      * Adds or update a user
      *
      * @param user UserDao
      */
     public Observable<Void> addOrUpdateUser(UserDao user) {
-        try {
-            UserQuery.add(queryAccessor, user);
-        }
-        catch ( RuntimeException err ) {
-            throw err;
-        }
+        UserQuery.add(queryAccessor, user);
         return Observable.empty();
     }
 
@@ -84,23 +85,14 @@ public class CassandraAccountService
      * @param username String
      */
     public Observable<Void> deleteUser(String username) {
-        try {
-            UserQuery.remove(queryAccessor, username);
-        }
-        catch ( RuntimeException err ) {
-            throw err;
-        }
+        UserQuery.remove(queryAccessor, username);
         return Observable.empty();
     }
 
     /*
+     * ========================================================================================
      * SONGS BY USER
-     * ================================================================================
-     * ================
-     */
-    /*
-     * ==============================================================================================
-     * ================
+     * ========================================================================================
      */
 
     /**
@@ -109,12 +101,7 @@ public class CassandraAccountService
      * @param song SongsByUserDao
      */
     public Observable<Void> addOrUpdateSongsByUser(SongsByUserDao song) {
-        try {
-            SongsByUserQuery.add(queryAccessor, song);
-        }
-        catch ( RuntimeException err ) {
-            throw err;
-        }
+        SongsByUserQuery.add(queryAccessor, song);
         return Observable.empty();
     }
 
@@ -127,7 +114,8 @@ public class CassandraAccountService
      * @return SongsByUserDao
      */
     public Observable<SongsByUserDao> getSongsByUser(UUID userId, String timestamp, UUID songUuid) {
-        return Observable.just(SongsByUserQuery.getUserSong(queryAccessor, mappingManager, userId, timestamp, songUuid));
+        return Observable
+            .just(SongsByUserQuery.getUserSong(queryAccessor, mappingManager, userId, timestamp, songUuid));
     }
 
     /**
@@ -161,23 +149,14 @@ public class CassandraAccountService
      * @param songUuid userId java.util.UUID
      */
     public Observable<Void> deleteSongsByUser(UUID userId, Date timestamp, UUID songUuid) {
-        try {
-            SongsByUserQuery.remove(queryAccessor, userId, timestamp, songUuid);
-        }
-        catch ( RuntimeException err ) {
-            throw err;
-        }
+        SongsByUserQuery.remove(queryAccessor, userId, timestamp, songUuid);
         return Observable.empty();
     }
 
     /*
+     * ==============================================================================================
      * ALBUMS BY USER
      * ================================================================================
-     * ===============
-     */
-    /*
-     * ==============================================================================================
-     * ================
      */
 
     /**
@@ -186,12 +165,7 @@ public class CassandraAccountService
      * @param album AlbumsByUserDao
      */
     public Observable<Void> addOrUpdateAlbumsByUser(AlbumsByUserDao album) {
-        try {
-            AlbumsByUserQuery.add(queryAccessor, album);
-        }
-        catch ( RuntimeException err ) {
-            throw err;
-        }
+        AlbumsByUserQuery.add(queryAccessor, album);
         return Observable.empty();
     }
 
@@ -204,7 +178,8 @@ public class CassandraAccountService
      * @return AlbumsByUserDao
      */
     public Observable<AlbumsByUserDao> getAlbumsByUser(UUID userId, String timestamp, UUID albumUuid) {
-        return Observable.just(AlbumsByUserQuery.getUserAlbum(queryAccessor, mappingManager, userId, timestamp, albumUuid));
+        return Observable.just(AlbumsByUserQuery.getUserAlbum(queryAccessor, mappingManager, userId, timestamp,
+                                                              albumUuid));
     }
 
     /**
@@ -238,23 +213,14 @@ public class CassandraAccountService
      * @param albumUuid userId java.util.UUID
      */
     public Observable<Void> deleteAlbumsByUser(UUID userId, Date timestamp, UUID albumUuid) {
-        try {
-            AlbumsByUserQuery.remove(queryAccessor, userId, timestamp, albumUuid);
-        }
-        catch ( RuntimeException err ) {
-            throw err;
-        }
+        AlbumsByUserQuery.remove(queryAccessor, userId, timestamp, albumUuid);
         return Observable.empty();
     }
 
     /*
+     * ==============================================================================================
      * ARTISTS BY USER
      * ==============================================================================
-     * ================
-     */
-    /*
-     * ==============================================================================================
-     * ================
      */
 
     /**
@@ -263,12 +229,7 @@ public class CassandraAccountService
      * @param artist ArtistsByUserDao
      */
     public Observable<Void> addOrUpdateArtistsByUser(ArtistsByUserDao artist) {
-        try {
-            ArtistsByUserQuery.add(queryAccessor, artist);
-        }
-        catch ( RuntimeException err ) {
-            throw err;
-        }
+        ArtistsByUserQuery.add(queryAccessor, artist);
         return Observable.empty();
     }
 
@@ -281,7 +242,8 @@ public class CassandraAccountService
      * @return ArtistsByUserDao
      */
     public Observable<ArtistsByUserDao> getArtistsByUser(UUID userId, String timestamp, UUID artistUuid) {
-        return Observable.just(ArtistsByUserQuery.getUserArtist(queryAccessor, mappingManager, userId, timestamp, artistUuid));
+        return Observable.just(ArtistsByUserQuery.getUserArtist(queryAccessor, mappingManager, userId, timestamp,
+                                                                artistUuid));
     }
 
     /**
@@ -316,12 +278,7 @@ public class CassandraAccountService
      * @param artistUuid java.util.UUID
      */
     public Observable<Void> deleteArtistsByUser(UUID userId, Date timestamp, UUID artistUuid) {
-        try {
-            ArtistsByUserQuery.remove(queryAccessor, userId, timestamp, artistUuid);
-        }
-        catch ( RuntimeException err ) {
-            throw err;
-        }
+        ArtistsByUserQuery.remove(queryAccessor, userId, timestamp, artistUuid);
         return Observable.empty();
     }
 }

@@ -13,13 +13,7 @@ public class UserQuery {
      * @param user String
      */
     public static void add(final QueryAccessor queryAccessor, final UserDao user) {
-        try {
-            queryAccessor
-                .addUser(user.getUsername(), user.getCreationTimestamp(), user.getPassword(), user.getUserId());
-        }
-        catch ( Exception err ) {
-            throw err;
-        }
+        queryAccessor.addUser(user.getUsername(), user.getCreationTimestamp(), user.getPassword(), user.getUserId());
     }
 
     /**
@@ -41,12 +35,7 @@ public class UserQuery {
      * @param username String
      */
     public static void remove(final QueryAccessor queryAccessor, final String username) {
-        try {
-            queryAccessor.deleteUser(username);
-        }
-        catch ( Exception err ) {
-            throw err;
-        }
+        queryAccessor.deleteUser(username);
     }
 
 }

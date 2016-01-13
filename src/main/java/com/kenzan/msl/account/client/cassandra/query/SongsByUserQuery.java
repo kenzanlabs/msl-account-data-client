@@ -27,7 +27,7 @@ public class SongsByUserQuery {
      * @return SongsByUserDao
      */
     public static SongsByUserDao getUserSong(final QueryAccessor queryAccessor, final MappingManager manager,
-                                     final UUID userId, final String timestamp, final UUID songUuid) {
+                                             final UUID userId, final String timestamp, final UUID songUuid) {
         Result<SongsByUserDao> results = manager.mapper(SongsByUserDao.class)
             .map(queryAccessor.songsByUser(userId, new Date(Long.parseLong(timestamp)), songUuid));
         return results.one();
@@ -43,8 +43,8 @@ public class SongsByUserQuery {
      * @param limit Integer
      * @return com.datastax.driver.core.ResultSet
      */
-    public static ResultSet getUserSongList(final QueryAccessor queryAccessor, final UUID userId, final Optional<String> timestamp,
-                                final Optional<Integer> limit) {
+    public static ResultSet getUserSongList(final QueryAccessor queryAccessor, final UUID userId,
+                                            final Optional<String> timestamp, final Optional<Integer> limit) {
         if ( limit.isPresent() && timestamp.isPresent() ) {
             return queryAccessor.songsByUser(userId, new Date(Long.parseLong(timestamp.get())), limit.get());
         }
@@ -66,15 +66,10 @@ public class SongsByUserQuery {
      * @param song SongsByUserDao
      */
     public static void add(final QueryAccessor queryAccessor, final SongsByUserDao song) {
-        try {
-            queryAccessor.addLibrarySong(song.getUserId(), "Song", new Date(), song.getSongId(), song.getSongName(),
-                                         song.getSongDuration(), song.getAlbumId(), song.getAlbumName(),
-                                         song.getAlbumYear(), song.getArtistId(), song.getArtistMbid(),
-                                         song.getArtistName());
-        }
-        catch ( Exception error ) {
-            throw error;
-        }
+        queryAccessor.addLibrarySong(song.getUserId(), "Song", new Date(), song.getSongId(), song.getSongName(),
+                                     song.getSongDuration(), song.getAlbumId(), song.getAlbumName(),
+                                     song.getAlbumYear(), song.getArtistId(), song.getArtistMbid(),
+                                     song.getArtistName());
     }
 
     /**
@@ -87,11 +82,7 @@ public class SongsByUserQuery {
      */
     public static void remove(final QueryAccessor queryAccessor, final UUID userId, final Date timestamp,
                               final UUID songUuid) {
-        try {
-            queryAccessor.deleteLibrarySong(songUuid, timestamp, userId);
-        }
-        catch ( RuntimeErrorException err ) {
-            throw err;
-        }
+        queryAccessor.deleteLibrarySong(songUuid, timestamp, userId);
+
     }
 }
