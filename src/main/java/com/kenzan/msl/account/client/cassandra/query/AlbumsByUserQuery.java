@@ -10,7 +10,6 @@ import com.google.common.base.Optional;
 import com.kenzan.msl.account.client.cassandra.QueryAccessor;
 import com.kenzan.msl.account.client.dao.AlbumsByUserDao;
 
-import javax.management.RuntimeErrorException;
 import java.util.Date;
 import java.util.UUID;
 
@@ -26,11 +25,17 @@ public class AlbumsByUserQuery {
      * @param albumUuid java.util.UUID
      * @return AlbumsByUserDao
      */
-    public static AlbumsByUserDao get(final QueryAccessor queryAccessor, final MappingManager manager,
-                                      final UUID userId, final String timestamp, final UUID albumUuid) {
+    public static Optional<AlbumsByUserDao> getUserAlbum(final QueryAccessor queryAccessor,
+                                                         final MappingManager manager, final UUID userId,
+                                                         final String timestamp, final UUID albumUuid) {
         Result<AlbumsByUserDao> results = manager.mapper(AlbumsByUserDao.class)
             .map(queryAccessor.albumsByUser(userId, new Date(Long.parseLong(timestamp)), albumUuid));
-        return results.one();
+        if ( results != null ) {
+            return Optional.of(results.one());
+        }
+        else {
+            return Optional.absent();
+        }
 
     }
 
@@ -44,8 +49,8 @@ public class AlbumsByUserQuery {
      * @param limit Integer
      * @return com.datastax.driver.core.ResultSet
      */
-    public static ResultSet get(final QueryAccessor queryAccessor, final UUID userId, final Optional<String> timestamp,
-                                final Optional<Integer> limit) {
+    public static ResultSet getUserAlbumList(final QueryAccessor queryAccessor, final UUID userId,
+                                             final Optional<String> timestamp, final Optional<Integer> limit) {
         if ( limit.isPresent() && timestamp.isPresent() ) {
             return queryAccessor.albumsByUser(userId, new Date(Long.parseLong(timestamp.get())), limit.get());
         }
@@ -67,14 +72,10 @@ public class AlbumsByUserQuery {
      * @param album AlbumsByUserDao
      */
     public static void add(final QueryAccessor queryAccessor, final AlbumsByUserDao album) {
-        try {
-            queryAccessor.addLibraryAlbum(album.getUserId(), "Album", new Date(), album.getAlbumId(),
-                                          album.getAlbumName(), album.getAlbumYear(), album.getArtistId(),
-                                          album.getArtistMbid(), album.getArtistName());
-        }
-        catch ( Exception error ) {
-            throw error;
-        }
+        queryAccessor.addLibraryAlbum(album.getUserId(), "Album", new Date(), album.getAlbumId(), album.getAlbumName(),
+                                      album.getAlbumYear(), album.getArtistId(), album.getArtistMbid(),
+                                      album.getArtistName());
+
     }
 
     /**
@@ -87,11 +88,6 @@ public class AlbumsByUserQuery {
      */
     public static void remove(final QueryAccessor queryAccessor, final UUID userId, final Date timestamp,
                               final UUID albumUuid) {
-        try {
-            queryAccessor.deleteLibraryAlbum(albumUuid, timestamp, userId);
-        }
-        catch ( RuntimeErrorException err ) {
-            throw err;
-        }
+        queryAccessor.deleteLibraryAlbum(albumUuid, timestamp, userId);
     }
 }

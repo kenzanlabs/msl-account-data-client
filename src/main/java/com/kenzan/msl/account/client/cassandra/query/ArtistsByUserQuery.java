@@ -10,7 +10,6 @@ import com.google.common.base.Optional;
 import com.kenzan.msl.account.client.cassandra.QueryAccessor;
 import com.kenzan.msl.account.client.dao.ArtistsByUserDao;
 
-import javax.management.RuntimeErrorException;
 import java.util.Date;
 import java.util.UUID;
 
@@ -26,11 +25,17 @@ public class ArtistsByUserQuery {
      * @param artistUuid java.util.UUID
      * @return ArtistsByUserDao
      */
-    public static ArtistsByUserDao get(final QueryAccessor queryAccessor, final MappingManager manager,
-                                       final UUID userId, final String timestamp, final UUID artistUuid) {
+    public static Optional<ArtistsByUserDao> getUserArtist(final QueryAccessor queryAccessor,
+                                                           final MappingManager manager, final UUID userId,
+                                                           final String timestamp, final UUID artistUuid) {
         Result<ArtistsByUserDao> results = manager.mapper(ArtistsByUserDao.class)
             .map(queryAccessor.artistsByUser(userId, new Date(Long.parseLong(timestamp)), artistUuid));
-        return results.one();
+        if ( results != null ) {
+            return Optional.of(results.one());
+        }
+        else {
+            return Optional.absent();
+        }
     }
 
     /**
@@ -43,8 +48,8 @@ public class ArtistsByUserQuery {
      * @param limit Integer
      * @return com.datastax.driver.core.ResultSet
      */
-    public static ResultSet get(final QueryAccessor queryAccessor, final UUID userId, final Optional<String> timestamp,
-                                final Optional<Integer> limit) {
+    public static ResultSet getUserArtistList(final QueryAccessor queryAccessor, final UUID userId,
+                                              final Optional<String> timestamp, final Optional<Integer> limit) {
         if ( limit.isPresent() && timestamp.isPresent() ) {
             return queryAccessor.artistsByUser(userId, new Date(Long.parseLong(timestamp.get())), limit.get());
         }
@@ -66,13 +71,8 @@ public class ArtistsByUserQuery {
      * @param artist ArtistsByUserDao
      */
     public static void add(final QueryAccessor queryAccessor, final ArtistsByUserDao artist) {
-        try {
-            queryAccessor.addLibraryArtist(artist.getUserId(), "Artist", new Date(), artist.getArtistId(),
-                                           artist.getArtistMbid(), artist.getArtistName());
-        }
-        catch ( Exception error ) {
-            throw error;
-        }
+        queryAccessor.addLibraryArtist(artist.getUserId(), "Artist", new Date(), artist.getArtistId(),
+                                       artist.getArtistMbid(), artist.getArtistName());
     }
 
     /**
@@ -86,11 +86,6 @@ public class ArtistsByUserQuery {
      */
     public static void remove(final QueryAccessor queryAccessor, final UUID userId, final Date timestamp,
                               final UUID artistUuid) {
-        try {
-            queryAccessor.deleteLibraryArtist(artistUuid, timestamp, userId);
-        }
-        catch ( RuntimeErrorException err ) {
-            throw err;
-        }
+        queryAccessor.deleteLibraryArtist(artistUuid, timestamp, userId);
     }
 }

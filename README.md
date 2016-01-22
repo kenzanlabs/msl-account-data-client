@@ -53,3 +53,4 @@ report gets generated under /target/site/index.html
 mvn cobertura:cobertura
 ```
 report gets generated under /target/site/cobertura/index.html
+
