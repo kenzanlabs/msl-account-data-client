@@ -3,7 +3,6 @@
  */
 package com.kenzan.msl.account.client.translate;
 
-import com.datastax.driver.mapping.Result;
 import com.kenzan.msl.account.client.dao.AlbumsByUserDao;
 import com.kenzan.msl.account.client.dao.ArtistsByUserDao;
 import com.kenzan.msl.account.client.dao.SongsByUserDao;
@@ -18,15 +17,15 @@ public class AccountClientTranslators {
 
     // ==========================================================================================================
     // ALBUMS
-    // =================================================================================================================
+    // ==========================================================================================================
 
-    public static List<AlbumInfo> translateAlbumsByUserDao(Result<AlbumsByUserDao> input) {
+    public static List<AlbumInfo> translateAlbumsByUserDao(Iterable<AlbumsByUserDao> input) {
         List<AlbumInfo> output = new ArrayList<>();
         for ( AlbumsByUserDao dao : input ) {
             AlbumInfo albumInfo = new AlbumInfo();
             albumInfo.setYear(dao.getAlbumYear());
             albumInfo.setArtistName(dao.getArtistName());
-            albumInfo.setArtistName(dao.getAlbumName());
+            albumInfo.setAlbumName(dao.getAlbumName());
             albumInfo.setAlbumId(dao.getAlbumId() == null ? null : dao.getAlbumId().toString());
             albumInfo.setArtistId(dao.getArtistId() == null ? null : dao.getArtistId().toString());
             albumInfo.setArtistMbid(dao.getArtistMbid() == null ? null : dao.getArtistMbid().toString());
@@ -39,9 +38,9 @@ public class AccountClientTranslators {
 
     // =========================================================================================================
     // ARTISTS
-    // =================================================================================================================
+    // =========================================================================================================
 
-    public static List<ArtistInfo> translateArtistByUserDao(Result<ArtistsByUserDao> input) {
+    public static List<ArtistInfo> translateArtistByUserDao(Iterable<ArtistsByUserDao> input) {
         List<ArtistInfo> output = new ArrayList<>();
 
         for ( ArtistsByUserDao dao : input ) {
@@ -58,9 +57,9 @@ public class AccountClientTranslators {
 
     // ===========================================================================================================
     // SONGS
-    // =================================================================================================================
+    // ===========================================================================================================
 
-    public static List<SongInfo> translateSongsByUserDao(Result<SongsByUserDao> input) {
+    public static List<SongInfo> translateSongsByUserDao(Iterable<SongsByUserDao> input) {
         List<SongInfo> output = new ArrayList<>();
         for ( SongsByUserDao dao : input ) {
             SongInfo songInfo = new SongInfo();
