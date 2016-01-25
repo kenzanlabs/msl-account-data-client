@@ -25,73 +25,77 @@ public class SongsByUserQueryTest {
 
     @Mock
     private QueryAccessor queryAccessor;
-    @Mock private MappingManager mappingManager;
+    @Mock
+    private MappingManager mappingManager;
 
     @Before
-    public void init () {
+    public void init() {
         queryAccessor = Mockito.mock(QueryAccessor.class);
         when(queryAccessor.songsByUser(tc.USER_ID, tc.TIMESTAMP, tc.SONG_ID))
-                .thenThrow(new RuntimeException("TEST_EXPECTED_EXCEPTION"));
+            .thenThrow(new RuntimeException("TEST_EXPECTED_EXCEPTION"));
     }
 
     @Test(expected = RuntimeException.class)
-    public void testGetSongsByUser () {
-        SongsByUserQuery.getUserSong(queryAccessor, mappingManager, tc.USER_ID, Long.toString(LONG_TIMESTAMP), tc.SONG_ID);
+    public void testGetSongsByUser() {
+        SongsByUserQuery.getUserSong(queryAccessor, mappingManager, tc.USER_ID, Long.toString(LONG_TIMESTAMP),
+                                     tc.SONG_ID);
     }
 
     @Test
-    public void testGetSongListByUser () {
+    public void testGetSongListByUser() {
         SongsByUserQuery.getUserSongList(queryAccessor, tc.USER_ID, Optional.absent(), Optional.absent());
         verify(queryAccessor, atLeastOnce()).songsByUser(tc.USER_ID);
     }
 
     @Test
-    public void testGetSongListByUserWithLimitAndTimestamp () {
-        SongsByUserQuery.getUserSongList(queryAccessor, tc.USER_ID, Optional.of(Long.toString(LONG_TIMESTAMP)), Optional.of(tc.LIMIT));
+    public void testGetSongListByUserWithLimitAndTimestamp() {
+        SongsByUserQuery.getUserSongList(queryAccessor, tc.USER_ID, Optional.of(Long.toString(LONG_TIMESTAMP)),
+                                         Optional.of(tc.LIMIT));
         verify(queryAccessor, atLeastOnce()).songsByUser(tc.USER_ID, tc.TIMESTAMP, tc.LIMIT);
     }
 
     @Test
-    public void testGetSongListByUserWithLimit () {
+    public void testGetSongListByUserWithLimit() {
         SongsByUserQuery.getUserSongList(queryAccessor, tc.USER_ID, Optional.absent(), Optional.of(tc.LIMIT));
         verify(queryAccessor, atLeastOnce()).songsByUser(tc.USER_ID, tc.LIMIT);
     }
 
     @Test
-    public void testGetSongListByUserWithTimestamp () {
-        SongsByUserQuery.getUserSongList(queryAccessor, tc.USER_ID, Optional.of(Long.toString(LONG_TIMESTAMP)), Optional.absent());
+    public void testGetSongListByUserWithTimestamp() {
+        SongsByUserQuery.getUserSongList(queryAccessor, tc.USER_ID, Optional.of(Long.toString(LONG_TIMESTAMP)),
+                                         Optional.absent());
         verify(queryAccessor, atLeastOnce()).songsByUser(tc.USER_ID, tc.TIMESTAMP);
     }
 
     @Test
-    public void testAddSongByUser () {
+    public void testAddSongByUser() {
         SongsByUserQuery.add(queryAccessor, tc.SONGS_BY_USER_DAO);
-        verify(queryAccessor, atLeastOnce()).addLibrarySong(
-                eq(tc.SONGS_BY_USER_DAO.getUserId()),
-                eq(tc.SONGS_BY_USER_DAO.getContentType()),
-                any(Date.class),
-                eq(tc.SONGS_BY_USER_DAO.getSongId()),
-                eq(tc.SONGS_BY_USER_DAO.getSongName()),
-                eq(tc.SONGS_BY_USER_DAO.getSongDuration()),
-                eq(tc.SONGS_BY_USER_DAO.getAlbumId()),
-                eq(tc.SONGS_BY_USER_DAO.getAlbumName()),
-                eq(tc.SONGS_BY_USER_DAO.getAlbumYear()),
-                eq(tc.SONGS_BY_USER_DAO.getArtistId()),
-                eq(tc.SONGS_BY_USER_DAO.getArtistMbid()),
-                eq(tc.SONGS_BY_USER_DAO.getArtistName())
-        );
+        verify(queryAccessor, atLeastOnce()).addLibrarySong(eq(tc.SONGS_BY_USER_DAO.getUserId()),
+                                                            eq(tc.SONGS_BY_USER_DAO.getContentType()), any(Date.class),
+                                                            eq(tc.SONGS_BY_USER_DAO.getSongId()),
+                                                            eq(tc.SONGS_BY_USER_DAO.getSongName()),
+                                                            eq(tc.SONGS_BY_USER_DAO.getSongDuration()),
+                                                            eq(tc.SONGS_BY_USER_DAO.getAlbumId()),
+                                                            eq(tc.SONGS_BY_USER_DAO.getAlbumName()),
+                                                            eq(tc.SONGS_BY_USER_DAO.getAlbumYear()),
+                                                            eq(tc.SONGS_BY_USER_DAO.getArtistId()),
+                                                            eq(tc.SONGS_BY_USER_DAO.getArtistMbid()),
+                                                            eq(tc.SONGS_BY_USER_DAO.getArtistName()));
+    }
+
+    @Test(expected = Exception.class)
+    public void testAddSongByUserException() {
+        SongsByUserQuery.add(null, tc.SONGS_BY_USER_DAO);
     }
 
     @Test
-    public void testRemoveSongByUser () {
+    public void testRemoveSongByUser() {
         SongsByUserQuery.remove(queryAccessor, tc.USER_ID, tc.TIMESTAMP, tc.SONG_ID);
         verify(queryAccessor, atLeastOnce()).deleteLibrarySong(tc.SONG_ID, tc.TIMESTAMP, tc.USER_ID);
     }
 
-    @Test (expected = NullPointerException.class)
-    public void testRemoveSongByUserException () {
+    @Test(expected = Exception.class)
+    public void testRemoveSongByUserException() {
         SongsByUserQuery.remove(null, tc.USER_ID, tc.TIMESTAMP, tc.SONG_ID);
     }
 }
-
-

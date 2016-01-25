@@ -29,10 +29,10 @@ public class TestConstants {
     private TestConstants() {
         ALBUM_BY_USER_DAO = new AlbumsByUserDao();
         ALBUM_BY_USER_DAO.setUserId(USER_ID);
-        ALBUM_BY_USER_DAO.setArtistName("Artist");
+        ALBUM_BY_USER_DAO.setArtistName("ArtistName");
         ALBUM_BY_USER_DAO.setAlbumId(ALBUM_ID);
         ALBUM_BY_USER_DAO.setArtistId(ARTIST_ID);
-        ALBUM_BY_USER_DAO.setAlbumName("album");
+        ALBUM_BY_USER_DAO.setAlbumName("albumName");
         ALBUM_BY_USER_DAO.setAlbumYear(1988);
         ALBUM_BY_USER_DAO.setArtistMbid(ARTIST_MBID);
         ALBUM_BY_USER_DAO.setContentType("Album");
@@ -42,21 +42,21 @@ public class TestConstants {
         ARTIST_BY_USER_DAO.setContentType("Artist");
         ARTIST_BY_USER_DAO.setArtistMbid(ARTIST_MBID);
         ARTIST_BY_USER_DAO.setArtistId(ARTIST_ID);
-        ARTIST_BY_USER_DAO.setArtistName("Artist");
+        ARTIST_BY_USER_DAO.setArtistName("ArtistName");
         ARTIST_BY_USER_DAO.setUserId(USER_ID);
 
         SONGS_BY_USER_DAO.setContentType("Song");
         SONGS_BY_USER_DAO.setSongDuration(100);
         SONGS_BY_USER_DAO.setSongId(SONG_ID);
-        SONGS_BY_USER_DAO.setSongName("Song");
+        SONGS_BY_USER_DAO.setSongName("SongName");
         SONGS_BY_USER_DAO.setUserId(USER_ID);
         SONGS_BY_USER_DAO.setArtistMbid(ARTIST_MBID);
         SONGS_BY_USER_DAO.setArtistId(ARTIST_ID);
-        SONGS_BY_USER_DAO.setArtistName("Artist");
+        SONGS_BY_USER_DAO.setArtistName("ArtistName");
         SONGS_BY_USER_DAO.setFavoritesTimestamp(TIMESTAMP);
         SONGS_BY_USER_DAO.setAlbumId(ALBUM_ID);
         SONGS_BY_USER_DAO.setAlbumYear(1988);
-        SONGS_BY_USER_DAO.setAlbumName("Album");
+        SONGS_BY_USER_DAO.setAlbumName("AlbumName");
 
         USER_DAO.setUserId(USER_ID);
         USER_DAO.setCreationTimestamp(TIMESTAMP);
