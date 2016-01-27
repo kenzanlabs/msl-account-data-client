@@ -69,11 +69,18 @@ public class CassandraAccountServiceTest {
 
         manager = PowerMockito.mock(MappingManager.class);
         PowerMockito.whenNew(MappingManager.class).withAnyArguments().thenReturn(manager);
-        Mapper myMapper = PowerMockito.mock(Mapper.class);
-        PowerMockito.when(manager.mapper(SongsByUserDao.class)).thenReturn(myMapper);
-        PowerMockito.when(manager.mapper(AlbumsByUserDao.class)).thenReturn(myMapper);
-        PowerMockito.when(manager.mapper(ArtistsByUserDao.class)).thenReturn(myMapper);
-        PowerMockito.when(myMapper.map(resultSet)).thenReturn(null);
+        
+        Mapper<SongsByUserDao> mySongsByUserMapper = PowerMockito.mock(Mapper.class);
+        PowerMockito.when(manager.mapper(SongsByUserDao.class)).thenReturn(mySongsByUserMapper);
+        PowerMockito.when(mySongsByUserMapper.map(resultSet)).thenReturn(null);
+        
+        Mapper<AlbumsByUserDao> myAlbumsByUserMapper = PowerMockito.mock(Mapper.class);
+        PowerMockito.when(manager.mapper(AlbumsByUserDao.class)).thenReturn(myAlbumsByUserMapper);
+        PowerMockito.when(myAlbumsByUserMapper.map(resultSet)).thenReturn(null);
+
+        Mapper<ArtistsByUserDao> myArtistsByUserMapper = PowerMockito.mock(Mapper.class);
+        PowerMockito.when(manager.mapper(ArtistsByUserDao.class)).thenReturn(myArtistsByUserMapper);
+        PowerMockito.when(myArtistsByUserMapper.map(resultSet)).thenReturn(null);
 
         PowerMockito.mockStatic(UserQuery.class);
         PowerMockito.mockStatic(SongsByUserQuery.class);
