@@ -9,7 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import javax.management.RuntimeErrorException;
 import java.util.Date;
 
 import static org.mockito.Matchers.any;

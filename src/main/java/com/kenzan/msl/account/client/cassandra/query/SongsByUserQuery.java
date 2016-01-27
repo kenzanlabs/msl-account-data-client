@@ -32,9 +32,7 @@ public class SongsByUserQuery {
         if ( results != null ) {
             return Optional.of(results.one());
         }
-        else {
-            return Optional.absent();
-        }
+        return Optional.absent();
     }
 
     /**
