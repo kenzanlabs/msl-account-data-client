@@ -71,7 +71,7 @@ public class SongsByUserQuery {
         queryAccessor.addLibrarySong(song.getUserId(), "Song", new Date(), song.getSongId(), song.getSongName(),
                                      song.getSongDuration(), song.getAlbumId(), song.getAlbumName(),
                                      song.getAlbumYear(), song.getArtistId(), song.getArtistMbid(),
-                                     song.getArtistName());
+                                     song.getArtistName(), song.getImageLink());
     }
 
     /**
