@@ -67,11 +67,11 @@ public class CassandraAccountServiceTest {
 
         manager = PowerMockito.mock(MappingManager.class);
         PowerMockito.whenNew(MappingManager.class).withAnyArguments().thenReturn(manager);
-        
+
         Mapper<SongsByUserDao> mySongsByUserMapper = PowerMockito.mock(Mapper.class);
         PowerMockito.when(manager.mapper(SongsByUserDao.class)).thenReturn(mySongsByUserMapper);
         PowerMockito.when(mySongsByUserMapper.map(resultSet)).thenReturn(null);
-        
+
         Mapper<AlbumsByUserDao> myAlbumsByUserMapper = PowerMockito.mock(Mapper.class);
         PowerMockito.when(manager.mapper(AlbumsByUserDao.class)).thenReturn(myAlbumsByUserMapper);
         PowerMockito.when(myAlbumsByUserMapper.map(resultSet)).thenReturn(null);

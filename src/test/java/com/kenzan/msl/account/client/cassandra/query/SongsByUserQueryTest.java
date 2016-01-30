@@ -32,13 +32,13 @@ public class SongsByUserQueryTest {
     public void init() {
         queryAccessor = Mockito.mock(QueryAccessor.class);
         when(queryAccessor.songsByUser(tc.USER_ID, tc.TIMESTAMP, tc.SONG_ID))
-            .thenThrow(new RuntimeException("TEST_EXPECTED_EXCEPTION"));
+                .thenThrow(new RuntimeException("TEST_EXPECTED_EXCEPTION"));
     }
 
     @Test(expected = RuntimeException.class)
     public void testGetSongsByUser() {
         SongsByUserQuery.getUserSong(queryAccessor, mappingManager, tc.USER_ID, Long.toString(LONG_TIMESTAMP),
-                                     tc.SONG_ID);
+                tc.SONG_ID);
     }
 
     @Test
@@ -50,7 +50,7 @@ public class SongsByUserQueryTest {
     @Test
     public void testGetSongListByUserWithLimitAndTimestamp() {
         SongsByUserQuery.getUserSongList(queryAccessor, tc.USER_ID, Optional.of(Long.toString(LONG_TIMESTAMP)),
-                                         Optional.of(tc.LIMIT));
+                Optional.of(tc.LIMIT));
         verify(queryAccessor, atLeastOnce()).songsByUser(tc.USER_ID, tc.TIMESTAMP, tc.LIMIT);
     }
 
@@ -63,7 +63,7 @@ public class SongsByUserQueryTest {
     @Test
     public void testGetSongListByUserWithTimestamp() {
         SongsByUserQuery.getUserSongList(queryAccessor, tc.USER_ID, Optional.of(Long.toString(LONG_TIMESTAMP)),
-                                         Optional.absent());
+                Optional.absent());
         verify(queryAccessor, atLeastOnce()).songsByUser(tc.USER_ID, tc.TIMESTAMP);
     }
 
@@ -71,16 +71,17 @@ public class SongsByUserQueryTest {
     public void testAddSongByUser() {
         SongsByUserQuery.add(queryAccessor, tc.SONGS_BY_USER_DAO);
         verify(queryAccessor, atLeastOnce()).addLibrarySong(eq(tc.SONGS_BY_USER_DAO.getUserId()),
-                                                            eq(tc.SONGS_BY_USER_DAO.getContentType()), any(Date.class),
-                                                            eq(tc.SONGS_BY_USER_DAO.getSongId()),
-                                                            eq(tc.SONGS_BY_USER_DAO.getSongName()),
-                                                            eq(tc.SONGS_BY_USER_DAO.getSongDuration()),
-                                                            eq(tc.SONGS_BY_USER_DAO.getAlbumId()),
-                                                            eq(tc.SONGS_BY_USER_DAO.getAlbumName()),
-                                                            eq(tc.SONGS_BY_USER_DAO.getAlbumYear()),
-                                                            eq(tc.SONGS_BY_USER_DAO.getArtistId()),
-                                                            eq(tc.SONGS_BY_USER_DAO.getArtistMbid()),
-                                                            eq(tc.SONGS_BY_USER_DAO.getArtistName()));
+                eq(tc.SONGS_BY_USER_DAO.getContentType()), any(Date.class),
+                eq(tc.SONGS_BY_USER_DAO.getSongId()),
+                eq(tc.SONGS_BY_USER_DAO.getSongName()),
+                eq(tc.SONGS_BY_USER_DAO.getSongDuration()),
+                eq(tc.SONGS_BY_USER_DAO.getAlbumId()),
+                eq(tc.SONGS_BY_USER_DAO.getAlbumName()),
+                eq(tc.SONGS_BY_USER_DAO.getAlbumYear()),
+                eq(tc.SONGS_BY_USER_DAO.getArtistId()),
+                eq(tc.SONGS_BY_USER_DAO.getArtistMbid()),
+                eq(tc.SONGS_BY_USER_DAO.getArtistName()),
+                eq(tc.SONGS_BY_USER_DAO.getImageLink()));
     }
 
     @Test(expected = Exception.class)
