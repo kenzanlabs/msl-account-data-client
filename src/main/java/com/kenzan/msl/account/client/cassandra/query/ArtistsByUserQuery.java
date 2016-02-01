@@ -70,7 +70,7 @@ public class ArtistsByUserQuery {
      */
     public static void add(final QueryAccessor queryAccessor, final ArtistsByUserDao artist) {
         queryAccessor.addLibraryArtist(artist.getUserId(), "Artist", new Date(), artist.getArtistId(),
-                                       artist.getArtistMbid(), artist.getArtistName());
+                                       artist.getArtistMbid(), artist.getArtistName(), artist.getImageLink());
     }
 
     /**
