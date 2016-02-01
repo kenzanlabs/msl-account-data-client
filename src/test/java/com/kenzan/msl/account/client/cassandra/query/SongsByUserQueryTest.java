@@ -69,24 +69,24 @@ public class SongsByUserQueryTest {
 
     @Test
     public void testAddSongByUser() {
-        SongsByUserQuery.add(queryAccessor, tc.SONGS_BY_USER_DAO);
-        verify(queryAccessor, atLeastOnce()).addLibrarySong(eq(tc.SONGS_BY_USER_DAO.getUserId()),
-                eq(tc.SONGS_BY_USER_DAO.getContentType()), any(Date.class),
-                eq(tc.SONGS_BY_USER_DAO.getSongId()),
-                eq(tc.SONGS_BY_USER_DAO.getSongName()),
-                eq(tc.SONGS_BY_USER_DAO.getSongDuration()),
-                eq(tc.SONGS_BY_USER_DAO.getAlbumId()),
-                eq(tc.SONGS_BY_USER_DAO.getAlbumName()),
-                eq(tc.SONGS_BY_USER_DAO.getAlbumYear()),
-                eq(tc.SONGS_BY_USER_DAO.getArtistId()),
-                eq(tc.SONGS_BY_USER_DAO.getArtistMbid()),
-                eq(tc.SONGS_BY_USER_DAO.getArtistName()),
-                eq(tc.SONGS_BY_USER_DAO.getImageLink()));
+        SongsByUserQuery.add(queryAccessor, tc.SONGS_BY_USER_DTO);
+        verify(queryAccessor, atLeastOnce()).addLibrarySong(eq(tc.SONGS_BY_USER_DTO.getUserId()),
+                eq(tc.SONGS_BY_USER_DTO.getContentType()), any(Date.class),
+                eq(tc.SONGS_BY_USER_DTO.getSongId()),
+                eq(tc.SONGS_BY_USER_DTO.getSongName()),
+                eq(tc.SONGS_BY_USER_DTO.getSongDuration()),
+                eq(tc.SONGS_BY_USER_DTO.getAlbumId()),
+                eq(tc.SONGS_BY_USER_DTO.getAlbumName()),
+                eq(tc.SONGS_BY_USER_DTO.getAlbumYear()),
+                eq(tc.SONGS_BY_USER_DTO.getArtistId()),
+                eq(tc.SONGS_BY_USER_DTO.getArtistMbid()),
+                eq(tc.SONGS_BY_USER_DTO.getArtistName()),
+                eq(tc.SONGS_BY_USER_DTO.getImageLink()));
     }
 
     @Test(expected = Exception.class)
     public void testAddSongByUserException() {
-        SongsByUserQuery.add(null, tc.SONGS_BY_USER_DAO);
+        SongsByUserQuery.add(null, tc.SONGS_BY_USER_DTO);
     }
 
     @Test

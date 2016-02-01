@@ -3,7 +3,7 @@ package com.kenzan.msl.account.client.cassandra.query;
 import com.datastax.driver.mapping.MappingManager;
 import com.datastax.driver.mapping.Result;
 import com.google.common.base.Optional;
-import com.kenzan.msl.account.client.dao.UserDao;
+import com.kenzan.msl.account.client.dto.UserDto;
 import com.kenzan.msl.account.client.cassandra.QueryAccessor;
 
 public class UserQuery {
@@ -14,7 +14,7 @@ public class UserQuery {
      * @param queryAccessor QueryAccessor
      * @param user String
      */
-    public static void add(final QueryAccessor queryAccessor, final UserDao user) {
+    public static void add(final QueryAccessor queryAccessor, final UserDto user) {
         queryAccessor.addUser(user.getUsername(), user.getCreationTimestamp(), user.getPassword(), user.getUserId());
     }
 
@@ -23,11 +23,11 @@ public class UserQuery {
      *
      * @param queryAccessor QueryAccessor
      * @param username String
-     * @return UserDao
+     * @return UserDto
      */
-    public static Optional<UserDao> get(final QueryAccessor queryAccessor, final MappingManager manager,
+    public static Optional<UserDto> get(final QueryAccessor queryAccessor, final MappingManager manager,
                                         final String username) {
-        Result<UserDao> results = manager.mapper(UserDao.class).map(queryAccessor.getUser(username));
+        Result<UserDto> results = manager.mapper(UserDto.class).map(queryAccessor.getUser(username));
         if ( results != null ) {
             return Optional.of(results.one());
         }
