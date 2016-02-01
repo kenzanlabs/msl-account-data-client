@@ -31,6 +31,7 @@ public class AccountClientTranslators {
             albumInfo.setArtistMbid(dao.getArtistMbid() == null ? null : dao.getArtistMbid().toString());
             albumInfo.setFavoritesTimestamp(dao.getFavoritesTimestamp() == null ? null : String.valueOf(dao
                 .getFavoritesTimestamp().getTime()));
+            albumInfo.setImageLink(dao.getImageLink());
             output.add(albumInfo);
         }
         return output;
@@ -50,6 +51,7 @@ public class AccountClientTranslators {
             artistInfo.setArtistMbid(dao.getArtistMbid() == null ? null : dao.getArtistMbid().toString());
             artistInfo.setFavoritesTimestamp(dao.getFavoritesTimestamp() == null ? null : String.valueOf(dao
                 .getFavoritesTimestamp().getTime()));
+            artistInfo.setImageLink(dao.getImageLink());
             output.add(artistInfo);
         }
         return output;
@@ -74,6 +76,7 @@ public class AccountClientTranslators {
             songInfo.setArtistMbid(dao.getArtistMbid() == null ? null : dao.getArtistMbid().toString());
             songInfo.setFavoritesTimestamp(dao.getFavoritesTimestamp() == null ? null : String.valueOf(dao
                 .getFavoritesTimestamp().getTime()));
+            songInfo.setImageLink(dao.getImageLink());
             output.add(songInfo);
         }
         return output;

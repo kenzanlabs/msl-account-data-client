@@ -71,7 +71,7 @@ public class AlbumsByUserQuery {
     public static void add(final QueryAccessor queryAccessor, final AlbumsByUserDao album) {
         queryAccessor.addLibraryAlbum(album.getUserId(), "Album", new Date(), album.getAlbumId(), album.getAlbumName(),
                                       album.getAlbumYear(), album.getArtistId(), album.getArtistMbid(),
-                                      album.getArtistName());
+                                      album.getArtistName(), album.getImageLink());
 
     }
 
