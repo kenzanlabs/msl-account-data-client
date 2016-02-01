@@ -8,7 +8,7 @@ import com.datastax.driver.mapping.MappingManager;
 import com.datastax.driver.mapping.Result;
 import com.google.common.base.Optional;
 import com.kenzan.msl.account.client.cassandra.QueryAccessor;
-import com.kenzan.msl.account.client.dao.AlbumsByUserDao;
+import com.kenzan.msl.account.client.dto.AlbumsByUserDto;
 
 import java.util.Date;
 import java.util.UUID;
@@ -23,12 +23,12 @@ public class AlbumsByUserQuery {
      * @param userId java.util.UUID
      * @param timestamp String
      * @param albumUuid java.util.UUID
-     * @return AlbumsByUserDao
+     * @return AlbumsByUserDto
      */
-    public static Optional<AlbumsByUserDao> getUserAlbum(final QueryAccessor queryAccessor,
+    public static Optional<AlbumsByUserDto> getUserAlbum(final QueryAccessor queryAccessor,
                                                          final MappingManager manager, final UUID userId,
                                                          final String timestamp, final UUID albumUuid) {
-        Result<AlbumsByUserDao> results = manager.mapper(AlbumsByUserDao.class)
+        Result<AlbumsByUserDto> results = manager.mapper(AlbumsByUserDto.class)
             .map(queryAccessor.albumsByUser(userId, new Date(Long.parseLong(timestamp)), albumUuid));
         if ( results != null ) {
             return Optional.of(results.one());
@@ -66,9 +66,9 @@ public class AlbumsByUserQuery {
      * Adds an album to a given userId library
      *
      * @param queryAccessor QueryAccessor
-     * @param album AlbumsByUserDao
+     * @param album AlbumsByUserDto
      */
-    public static void add(final QueryAccessor queryAccessor, final AlbumsByUserDao album) {
+    public static void add(final QueryAccessor queryAccessor, final AlbumsByUserDto album) {
         queryAccessor.addLibraryAlbum(album.getUserId(), "Album", new Date(), album.getAlbumId(), album.getAlbumName(),
                                       album.getAlbumYear(), album.getArtistId(), album.getArtistMbid(),
                                       album.getArtistName(), album.getImageLink());

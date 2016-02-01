@@ -7,7 +7,7 @@ import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.mapping.MappingManager;
 import com.datastax.driver.mapping.Result;
 import com.google.common.base.Optional;
-import com.kenzan.msl.account.client.dao.SongsByUserDao;
+import com.kenzan.msl.account.client.dto.SongsByUserDto;
 import com.kenzan.msl.account.client.cassandra.QueryAccessor;
 
 import java.util.Date;
@@ -23,11 +23,11 @@ public class SongsByUserQuery {
      * @param userId java.util.UUID
      * @param timestamp String
      * @param songUuid java.util.UUID
-     * @return SongsByUserDao
+     * @return SongsByUserDto
      */
-    public static Optional<SongsByUserDao> getUserSong(final QueryAccessor queryAccessor, final MappingManager manager,
+    public static Optional<SongsByUserDto> getUserSong(final QueryAccessor queryAccessor, final MappingManager manager,
                                                        final UUID userId, final String timestamp, final UUID songUuid) {
-        Result<SongsByUserDao> results = manager.mapper(SongsByUserDao.class)
+        Result<SongsByUserDto> results = manager.mapper(SongsByUserDto.class)
             .map(queryAccessor.songsByUser(userId, new Date(Long.parseLong(timestamp)), songUuid));
         if ( results != null ) {
             return Optional.of(results.one());
@@ -65,9 +65,9 @@ public class SongsByUserQuery {
      * Adds a song to a given userId library
      *
      * @param queryAccessor QueryAccessor
-     * @param song SongsByUserDao
+     * @param song SongsByUserDto
      */
-    public static void add(final QueryAccessor queryAccessor, final SongsByUserDao song) {
+    public static void add(final QueryAccessor queryAccessor, final SongsByUserDto song) {
         queryAccessor.addLibrarySong(song.getUserId(), "Song", new Date(), song.getSongId(), song.getSongName(),
                                      song.getSongDuration(), song.getAlbumId(), song.getAlbumName(),
                                      song.getAlbumYear(), song.getArtistId(), song.getArtistMbid(),

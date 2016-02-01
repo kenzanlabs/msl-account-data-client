@@ -1,9 +1,9 @@
 package com.kenzan.msl.account.client;
 
-import com.kenzan.msl.account.client.dao.AlbumsByUserDao;
-import com.kenzan.msl.account.client.dao.ArtistsByUserDao;
-import com.kenzan.msl.account.client.dao.SongsByUserDao;
-import com.kenzan.msl.account.client.dao.UserDao;
+import com.kenzan.msl.account.client.dto.AlbumsByUserDto;
+import com.kenzan.msl.account.client.dto.ArtistsByUserDto;
+import com.kenzan.msl.account.client.dto.SongsByUserDto;
+import com.kenzan.msl.account.client.dto.UserDto;
 
 import java.util.Date;
 import java.util.UUID;
@@ -22,50 +22,50 @@ public class TestConstants {
     public final String USERNAME = "username";
     public final String IMAGE_LINK = "http://www.somelink.com/image.png";
 
-    public AlbumsByUserDao ALBUM_BY_USER_DAO = new AlbumsByUserDao();
-    public ArtistsByUserDao ARTIST_BY_USER_DAO = new ArtistsByUserDao();
-    public SongsByUserDao SONGS_BY_USER_DAO = new SongsByUserDao();
-    public UserDao USER_DAO = new UserDao();
+    public AlbumsByUserDto ALBUM_BY_USER_DTO = new AlbumsByUserDto();
+    public ArtistsByUserDto ARTIST_BY_USER_DTO = new ArtistsByUserDto();
+    public SongsByUserDto SONGS_BY_USER_DTO = new SongsByUserDto();
+    public UserDto USER_DTO = new UserDto();
 
     private TestConstants() {
-        ALBUM_BY_USER_DAO = new AlbumsByUserDao();
-        ALBUM_BY_USER_DAO.setUserId(USER_ID);
-        ALBUM_BY_USER_DAO.setArtistName("ArtistName");
-        ALBUM_BY_USER_DAO.setAlbumId(ALBUM_ID);
-        ALBUM_BY_USER_DAO.setArtistId(ARTIST_ID);
-        ALBUM_BY_USER_DAO.setAlbumName("albumName");
-        ALBUM_BY_USER_DAO.setAlbumYear(1988);
-        ALBUM_BY_USER_DAO.setArtistMbid(ARTIST_MBID);
-        ALBUM_BY_USER_DAO.setContentType("Album");
-        ALBUM_BY_USER_DAO.setFavoritesTimestamp(TIMESTAMP);
-        ALBUM_BY_USER_DAO.setImageLink(IMAGE_LINK);
+        ALBUM_BY_USER_DTO = new AlbumsByUserDto();
+        ALBUM_BY_USER_DTO.setUserId(USER_ID);
+        ALBUM_BY_USER_DTO.setArtistName("ArtistName");
+        ALBUM_BY_USER_DTO.setAlbumId(ALBUM_ID);
+        ALBUM_BY_USER_DTO.setArtistId(ARTIST_ID);
+        ALBUM_BY_USER_DTO.setAlbumName("albumName");
+        ALBUM_BY_USER_DTO.setAlbumYear(1988);
+        ALBUM_BY_USER_DTO.setArtistMbid(ARTIST_MBID);
+        ALBUM_BY_USER_DTO.setContentType("Album");
+        ALBUM_BY_USER_DTO.setFavoritesTimestamp(TIMESTAMP);
+        ALBUM_BY_USER_DTO.setImageLink(IMAGE_LINK);
 
-        ARTIST_BY_USER_DAO.setFavoritesTimestamp(TIMESTAMP);
-        ARTIST_BY_USER_DAO.setContentType("Artist");
-        ARTIST_BY_USER_DAO.setArtistMbid(ARTIST_MBID);
-        ARTIST_BY_USER_DAO.setArtistId(ARTIST_ID);
-        ARTIST_BY_USER_DAO.setArtistName("ArtistName");
-        ARTIST_BY_USER_DAO.setUserId(USER_ID);
-        ARTIST_BY_USER_DAO.setImageLink(IMAGE_LINK);
+        ARTIST_BY_USER_DTO.setFavoritesTimestamp(TIMESTAMP);
+        ARTIST_BY_USER_DTO.setContentType("Artist");
+        ARTIST_BY_USER_DTO.setArtistMbid(ARTIST_MBID);
+        ARTIST_BY_USER_DTO.setArtistId(ARTIST_ID);
+        ARTIST_BY_USER_DTO.setArtistName("ArtistName");
+        ARTIST_BY_USER_DTO.setUserId(USER_ID);
+        ARTIST_BY_USER_DTO.setImageLink(IMAGE_LINK);
 
-        SONGS_BY_USER_DAO.setContentType("Song");
-        SONGS_BY_USER_DAO.setSongDuration(100);
-        SONGS_BY_USER_DAO.setSongId(SONG_ID);
-        SONGS_BY_USER_DAO.setSongName("SongName");
-        SONGS_BY_USER_DAO.setUserId(USER_ID);
-        SONGS_BY_USER_DAO.setArtistMbid(ARTIST_MBID);
-        SONGS_BY_USER_DAO.setArtistId(ARTIST_ID);
-        SONGS_BY_USER_DAO.setArtistName("ArtistName");
-        SONGS_BY_USER_DAO.setFavoritesTimestamp(TIMESTAMP);
-        SONGS_BY_USER_DAO.setAlbumId(ALBUM_ID);
-        SONGS_BY_USER_DAO.setAlbumYear(1988);
-        SONGS_BY_USER_DAO.setAlbumName("AlbumName");
-        SONGS_BY_USER_DAO.setImageLink(IMAGE_LINK);
+        SONGS_BY_USER_DTO.setContentType("Song");
+        SONGS_BY_USER_DTO.setSongDuration(100);
+        SONGS_BY_USER_DTO.setSongId(SONG_ID);
+        SONGS_BY_USER_DTO.setSongName("SongName");
+        SONGS_BY_USER_DTO.setUserId(USER_ID);
+        SONGS_BY_USER_DTO.setArtistMbid(ARTIST_MBID);
+        SONGS_BY_USER_DTO.setArtistId(ARTIST_ID);
+        SONGS_BY_USER_DTO.setArtistName("ArtistName");
+        SONGS_BY_USER_DTO.setFavoritesTimestamp(TIMESTAMP);
+        SONGS_BY_USER_DTO.setAlbumId(ALBUM_ID);
+        SONGS_BY_USER_DTO.setAlbumYear(1988);
+        SONGS_BY_USER_DTO.setAlbumName("AlbumName");
+        SONGS_BY_USER_DTO.setImageLink(IMAGE_LINK);
 
-        USER_DAO.setUserId(USER_ID);
-        USER_DAO.setCreationTimestamp(TIMESTAMP);
-        USER_DAO.setPassword("password");
-        USER_DAO.setUsername(USERNAME);
+        USER_DTO.setUserId(USER_ID);
+        USER_DTO.setCreationTimestamp(TIMESTAMP);
+        USER_DTO.setPassword("password");
+        USER_DTO.setUsername(USERNAME);
     }
 
     public static TestConstants getInstance() {

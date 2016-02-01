@@ -34,10 +34,10 @@ public class UserQueryTest {
 
     @Test
     public void testAddUser() {
-        UserQuery.add(queryAccessor, tc.USER_DAO);
-        verify(queryAccessor, atLeastOnce()).addUser(eq(tc.USER_DAO.getUsername()),
-                                                     eq(tc.USER_DAO.getCreationTimestamp()),
-                                                     eq(tc.USER_DAO.getPassword()), eq(tc.USER_DAO.getUserId()));
+        UserQuery.add(queryAccessor, tc.USER_DTO);
+        verify(queryAccessor, atLeastOnce()).addUser(eq(tc.USER_DTO.getUsername()),
+                                                     eq(tc.USER_DTO.getCreationTimestamp()),
+                                                     eq(tc.USER_DTO.getPassword()), eq(tc.USER_DTO.getUserId()));
     }
 
     @Test
