@@ -1,7 +1,7 @@
 /*
  * Copyright 2015, Kenzan, All rights reserved.
  */
-package com.kenzan.msl.account.client.dao;
+package com.kenzan.msl.account.client.dto;
 
 import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
@@ -16,7 +16,7 @@ import java.util.UUID;
  * @author billschwanitz
  */
 @Table(name = "user_data_by_user")
-public class UserDataByUserDao {
+public class UserDataByUserDto {
     @PartitionKey
     @Column(name = "user_id")
     private UUID userId;

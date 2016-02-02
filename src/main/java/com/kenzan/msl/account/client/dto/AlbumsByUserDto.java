@@ -1,7 +1,7 @@
 /*
  * Copyright 2015, Kenzan, All rights reserved.
  */
-package com.kenzan.msl.account.client.dao;
+package com.kenzan.msl.account.client.dto;
 
 import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
@@ -10,8 +10,8 @@ import com.datastax.driver.mapping.annotations.Table;
 import java.util.Date;
 import java.util.UUID;
 
-@Table(name = "artists_by_user")
-public class ArtistsByUserDao {
+@Table(name = "albums_by_user")
+public class AlbumsByUserDto {
 
     @PartitionKey(value = 0)
     @Column(name = "user_id")
@@ -21,6 +21,14 @@ public class ArtistsByUserDao {
     private String contentType;
     @Column(name = "favorites_timestamp")
     private Date favoritesTimestamp;
+
+    @Column(name = "album_id")
+    private UUID albumId;
+    @Column(name = "album_name")
+    private String albumName;
+    @Column(name = "album_year")
+    private Integer albumYear;
+
     @Column(name = "artist_id")
     private UUID artistId;
     @Column(name = "artist_mbid")
@@ -60,6 +68,30 @@ public class ArtistsByUserDao {
 
     public void setFavoritesTimestamp(Date favoritesTimestamp) {
         this.favoritesTimestamp = favoritesTimestamp;
+    }
+
+    public UUID getAlbumId() {
+        return albumId;
+    }
+
+    public void setAlbumId(UUID albumId) {
+        this.albumId = albumId;
+    }
+
+    public String getAlbumName() {
+        return albumName;
+    }
+
+    public void setAlbumName(String albumName) {
+        this.albumName = albumName;
+    }
+
+    public Integer getAlbumYear() {
+        return albumYear;
+    }
+
+    public void setAlbumYear(Integer albumYear) {
+        this.albumYear = albumYear;
     }
 
     public UUID getArtistId() {

@@ -1,9 +1,9 @@
 package com.kenzan.msl.account.client.translate;
 
 import com.kenzan.msl.account.client.TestConstants;
-import com.kenzan.msl.account.client.dao.AlbumsByUserDao;
-import com.kenzan.msl.account.client.dao.ArtistsByUserDao;
-import com.kenzan.msl.account.client.dao.SongsByUserDao;
+import com.kenzan.msl.account.client.dto.AlbumsByUserDto;
+import com.kenzan.msl.account.client.dto.ArtistsByUserDto;
+import com.kenzan.msl.account.client.dto.SongsByUserDto;
 import io.swagger.model.AlbumInfo;
 import io.swagger.model.ArtistInfo;
 import io.swagger.model.SongInfo;
@@ -20,18 +20,18 @@ public class AccountClientTranslatorsTest {
 
     TestConstants tc = TestConstants.getInstance();
 
-    AlbumsByUserDao ALBUM_1 = tc.ALBUM_BY_USER_DAO;
-    AlbumsByUserDao ALBUM_2 = tc.ALBUM_BY_USER_DAO;
+    AlbumsByUserDto ALBUM_1 = tc.ALBUM_BY_USER_DTO;
+    AlbumsByUserDto ALBUM_2 = tc.ALBUM_BY_USER_DTO;
 
-    ArtistsByUserDao ARTIST_1 = tc.ARTIST_BY_USER_DAO;
-    ArtistsByUserDao ARTIST_2 = tc.ARTIST_BY_USER_DAO;
+    ArtistsByUserDto ARTIST_1 = tc.ARTIST_BY_USER_DTO;
+    ArtistsByUserDto ARTIST_2 = tc.ARTIST_BY_USER_DTO;
 
-    SongsByUserDao SONG_1 = tc.SONGS_BY_USER_DAO;
-    SongsByUserDao SONG_2 = tc.SONGS_BY_USER_DAO;
+    SongsByUserDto SONG_1 = tc.SONGS_BY_USER_DTO;
+    SongsByUserDto SONG_2 = tc.SONGS_BY_USER_DTO;
 
-    List<AlbumsByUserDao> albums = new ArrayList<>();
-    List<ArtistsByUserDao> artists = new ArrayList<>();
-    List<SongsByUserDao> songs = new ArrayList<>();
+    List<AlbumsByUserDto> albums = new ArrayList<>();
+    List<ArtistsByUserDto> artists = new ArrayList<>();
+    List<SongsByUserDto> songs = new ArrayList<>();
 
     @Before
     public void init() {
@@ -52,8 +52,8 @@ public class AccountClientTranslatorsTest {
     }
 
     @Test
-    public void testTranslateAlbumsByUserDao() {
-        List<AlbumInfo> model = AccountClientTranslators.translateAlbumsByUserDao(albums);
+    public void testTranslateAlbumsByUserDto() {
+        List<AlbumInfo> model = AccountClientTranslators.translateAlbumsByUserDto(albums);
         assertNotNull(model);
         assertEquals(2, model.size());
         assertEquals(ALBUM_1.getAlbumName(), model.get(0).getAlbumName());
@@ -61,13 +61,13 @@ public class AccountClientTranslatorsTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void testTranslateAlbumsByUserDaoException() {
-        AccountClientTranslators.translateAlbumsByUserDao(null);
+    public void testTranslateAlbumsByUserDtoException() {
+        AccountClientTranslators.translateAlbumsByUserDto(null);
     }
 
     @Test
-    public void testTranslateArtistByUserDao() {
-        List<ArtistInfo> model = AccountClientTranslators.translateArtistByUserDao(artists);
+    public void testTranslateArtistByUserDto() {
+        List<ArtistInfo> model = AccountClientTranslators.translateArtistByUserDto(artists);
         assertNotNull(model);
         assertEquals(2, model.size());
         assertEquals(ARTIST_1.getArtistName(), model.get(0).getArtistName());
@@ -76,13 +76,13 @@ public class AccountClientTranslatorsTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void testTranslateArtistsByUserDaoException() {
-        AccountClientTranslators.translateArtistByUserDao(null);
+    public void testTranslateArtistsByUserDtoException() {
+        AccountClientTranslators.translateArtistByUserDto(null);
     }
 
     @Test
-    public void testTranslateSongsByUserDao() {
-        List<SongInfo> model = AccountClientTranslators.translateSongsByUserDao(songs);
+    public void testTranslateSongsByUserDto() {
+        List<SongInfo> model = AccountClientTranslators.translateSongsByUserDto(songs);
         assertNotNull(model);
         assertEquals(2, model.size());
         assertEquals(SONG_1.getArtistName(), model.get(0).getArtistName());
@@ -91,7 +91,7 @@ public class AccountClientTranslatorsTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void testTranslateSongsByUserDaoException() {
-        AccountClientTranslators.translateSongsByUserDao(null);
+    public void testTranslateSongsByUserDtoException() {
+        AccountClientTranslators.translateSongsByUserDto(null);
     }
 }

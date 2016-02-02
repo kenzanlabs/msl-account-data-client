@@ -15,10 +15,10 @@ import com.kenzan.msl.account.client.cassandra.query.AlbumsByUserQuery;
 import com.kenzan.msl.account.client.cassandra.query.ArtistsByUserQuery;
 import com.kenzan.msl.account.client.cassandra.query.SongsByUserQuery;
 import com.kenzan.msl.account.client.cassandra.query.UserQuery;
-import com.kenzan.msl.account.client.dao.AlbumsByUserDao;
-import com.kenzan.msl.account.client.dao.ArtistsByUserDao;
-import com.kenzan.msl.account.client.dao.SongsByUserDao;
-import com.kenzan.msl.account.client.dao.UserDao;
+import com.kenzan.msl.account.client.dto.AlbumsByUserDto;
+import com.kenzan.msl.account.client.dto.ArtistsByUserDto;
+import com.kenzan.msl.account.client.dto.SongsByUserDto;
+import com.kenzan.msl.account.client.dto.UserDto;
 import rx.Observable;
 
 import java.util.Date;
@@ -61,9 +61,9 @@ public class CassandraAccountService
     /**
      * Adds or update a user
      *
-     * @param user UserDao
+     * @param user UserDto
      */
-    public Observable<Void> addOrUpdateUser(UserDao user) {
+    public Observable<Void> addOrUpdateUser(UserDto user) {
         UserQuery.add(queryAccessor, user);
         return Observable.empty();
     }
@@ -72,10 +72,10 @@ public class CassandraAccountService
      * Retrieves a specific user by its userId
      *
      * @param username String
-     * @return UserDao
+     * @return UserDto
      */
-    public Observable<UserDao> getUser(String username) {
-        Optional<UserDao> results = UserQuery.get(queryAccessor, mappingManager, username);
+    public Observable<UserDto> getUser(String username) {
+        Optional<UserDto> results = UserQuery.get(queryAccessor, mappingManager, username);
         if ( results.isPresent() ) {
             return Observable.just(results.get());
         }
@@ -102,9 +102,9 @@ public class CassandraAccountService
     /**
      * Adds a song to a given userId library
      *
-     * @param song SongsByUserDao
+     * @param song SongsByUserDto
      */
-    public Observable<Void> addOrUpdateSongsByUser(SongsByUserDao song) {
+    public Observable<Void> addOrUpdateSongsByUser(SongsByUserDto song) {
         SongsByUserQuery.add(queryAccessor, song);
         return Observable.empty();
     }
@@ -115,10 +115,10 @@ public class CassandraAccountService
      * @param userId java.util.UUID
      * @param timestamp String
      * @param songUuid java.util.UUID
-     * @return SongsByUserDao
+     * @return SongsByUserDto
      */
-    public Observable<SongsByUserDao> getSongsByUser(UUID userId, String timestamp, UUID songUuid) {
-        Optional<SongsByUserDao> results = SongsByUserQuery.getUserSong(queryAccessor, mappingManager, userId,
+    public Observable<SongsByUserDto> getSongsByUser(UUID userId, String timestamp, UUID songUuid) {
+        Optional<SongsByUserDto> results = SongsByUserQuery.getUserSong(queryAccessor, mappingManager, userId,
                                                                         timestamp, songUuid);
         if ( results.isPresent() ) {
             return Observable.just(results.get());
@@ -143,10 +143,10 @@ public class CassandraAccountService
      * Maps a resultSet object into a SongsByUser result array
      *
      * @param object com.datastax.driver.core.ResultSet
-     * @return Observable<Result<SongsByUserDao>>
+     * @return Observable<Result<SongsByUserDto>>
      */
-    public Observable<Result<SongsByUserDao>> mapSongsByUser(Observable<ResultSet> object) {
-        return Observable.just(mappingManager.mapper(SongsByUserDao.class).map(object.toBlocking().first()));
+    public Observable<Result<SongsByUserDto>> mapSongsByUser(Observable<ResultSet> object) {
+        return Observable.just(mappingManager.mapper(SongsByUserDto.class).map(object.toBlocking().first()));
     }
 
     /**
@@ -170,9 +170,9 @@ public class CassandraAccountService
     /**
      * Adds an album to a given userId library
      *
-     * @param album AlbumsByUserDao
+     * @param album AlbumsByUserDto
      */
-    public Observable<Void> addOrUpdateAlbumsByUser(AlbumsByUserDao album) {
+    public Observable<Void> addOrUpdateAlbumsByUser(AlbumsByUserDto album) {
         AlbumsByUserQuery.add(queryAccessor, album);
         return Observable.empty();
     }
@@ -183,10 +183,10 @@ public class CassandraAccountService
      * @param userId java.util.UUID
      * @param timestamp String
      * @param albumUuid java.util.UUID
-     * @return AlbumsByUserDao
+     * @return AlbumsByUserDto
      */
-    public Observable<AlbumsByUserDao> getAlbumsByUser(UUID userId, String timestamp, UUID albumUuid) {
-        Optional<AlbumsByUserDao> results = AlbumsByUserQuery.getUserAlbum(queryAccessor, mappingManager, userId,
+    public Observable<AlbumsByUserDto> getAlbumsByUser(UUID userId, String timestamp, UUID albumUuid) {
+        Optional<AlbumsByUserDto> results = AlbumsByUserQuery.getUserAlbum(queryAccessor, mappingManager, userId,
                                                                            timestamp, albumUuid);
         if ( results.isPresent() ) {
             return Observable.just(results.get());
@@ -208,13 +208,13 @@ public class CassandraAccountService
     }
 
     /**
-     * Maps a resultSet object into a albumsByUserDao result array
+     * Maps a resultSet object into a albumsByUserDto result array
      *
      * @param object com.datastax.driver.core.ResultSet
-     * @return Observable<Result<AlbumsByUserDao>>
+     * @return Observable<Result<AlbumsByUserDto>>
      */
-    public Observable<Result<AlbumsByUserDao>> mapAlbumsByUser(Observable<ResultSet> object) {
-        return Observable.just(mappingManager.mapper(AlbumsByUserDao.class).map(object.toBlocking().first()));
+    public Observable<Result<AlbumsByUserDto>> mapAlbumsByUser(Observable<ResultSet> object) {
+        return Observable.just(mappingManager.mapper(AlbumsByUserDto.class).map(object.toBlocking().first()));
     }
 
     /**
@@ -238,9 +238,9 @@ public class CassandraAccountService
     /**
      * Adds an artist to a given userId library
      *
-     * @param artist ArtistsByUserDao
+     * @param artist ArtistsByUserDto
      */
-    public Observable<Void> addOrUpdateArtistsByUser(ArtistsByUserDao artist) {
+    public Observable<Void> addOrUpdateArtistsByUser(ArtistsByUserDto artist) {
         ArtistsByUserQuery.add(queryAccessor, artist);
         return Observable.empty();
     }
@@ -251,10 +251,10 @@ public class CassandraAccountService
      * @param userId java.util.UUID
      * @param timestamp String
      * @param artistUuid java.util.UUID
-     * @return ArtistsByUserDao
+     * @return ArtistsByUserDto
      */
-    public Observable<ArtistsByUserDao> getArtistsByUser(UUID userId, String timestamp, UUID artistUuid) {
-        Optional<ArtistsByUserDao> results = ArtistsByUserQuery.getUserArtist(queryAccessor, mappingManager, userId,
+    public Observable<ArtistsByUserDto> getArtistsByUser(UUID userId, String timestamp, UUID artistUuid) {
+        Optional<ArtistsByUserDto> results = ArtistsByUserQuery.getUserArtist(queryAccessor, mappingManager, userId,
                                                                               timestamp, artistUuid);
         if ( results.isPresent() ) {
             return Observable.just(results.get());
@@ -276,13 +276,13 @@ public class CassandraAccountService
     }
 
     /**
-     * Maps a resultSet object into a artistsByUserDao result array
+     * Maps a resultSet object into a artistsByUserDto result array
      *
      * @param object com.datastax.driver.core.ResultSet
-     * @return Observable<Result<ArtistsByUserDao>>
+     * @return Observable<Result<ArtistsByUserDto>>
      */
-    public Observable<Result<ArtistsByUserDao>> mapArtistByUser(Observable<ResultSet> object) {
-        return Observable.just(mappingManager.mapper(ArtistsByUserDao.class).map(object.toBlocking().first()));
+    public Observable<Result<ArtistsByUserDto>> mapArtistByUser(Observable<ResultSet> object) {
+        return Observable.just(mappingManager.mapper(ArtistsByUserDto.class).map(object.toBlocking().first()));
     }
 
     /**
