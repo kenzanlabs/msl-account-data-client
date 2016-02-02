@@ -69,18 +69,18 @@ public class ArtistsByUserQueryTest {
 
     @Test
     public void testAddArtistByUser() {
-        ArtistsByUserQuery.add(queryAccessor, tc.ARTIST_BY_USER_DAO);
-        verify(queryAccessor, atLeastOnce()).addLibraryArtist(eq(tc.ARTIST_BY_USER_DAO.getUserId()),
-                eq(tc.ARTIST_BY_USER_DAO.getContentType()),
-                any(Date.class), eq(tc.ARTIST_BY_USER_DAO.getArtistId()),
-                eq(tc.ARTIST_BY_USER_DAO.getArtistMbid()),
-                eq(tc.ARTIST_BY_USER_DAO.getArtistName()),
-                eq(tc.ARTIST_BY_USER_DAO.getImageLink()));
+        ArtistsByUserQuery.add(queryAccessor, tc.ARTIST_BY_USER_DTO);
+        verify(queryAccessor, atLeastOnce()).addLibraryArtist(eq(tc.ARTIST_BY_USER_DTO.getUserId()),
+                eq(tc.ARTIST_BY_USER_DTO.getContentType()),
+                any(Date.class), eq(tc.ARTIST_BY_USER_DTO.getArtistId()),
+                eq(tc.ARTIST_BY_USER_DTO.getArtistMbid()),
+                eq(tc.ARTIST_BY_USER_DTO.getArtistName()),
+                eq(tc.ARTIST_BY_USER_DTO.getImageLink()));
     }
 
     @Test(expected = Exception.class)
     public void testAddArtistByUserException() {
-        ArtistsByUserQuery.add(null, tc.ARTIST_BY_USER_DAO);
+        ArtistsByUserQuery.add(null, tc.ARTIST_BY_USER_DTO);
     }
 
     @Test

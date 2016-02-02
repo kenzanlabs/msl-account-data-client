@@ -8,7 +8,7 @@ import com.datastax.driver.mapping.MappingManager;
 import com.datastax.driver.mapping.Result;
 import com.google.common.base.Optional;
 import com.kenzan.msl.account.client.cassandra.QueryAccessor;
-import com.kenzan.msl.account.client.dao.ArtistsByUserDao;
+import com.kenzan.msl.account.client.dto.ArtistsByUserDto;
 
 import java.util.Date;
 import java.util.UUID;
@@ -23,12 +23,12 @@ public class ArtistsByUserQuery {
      * @param userId java.util.UUID
      * @param timestamp String
      * @param artistUuid java.util.UUID
-     * @return ArtistsByUserDao
+     * @return ArtistsByUserDto
      */
-    public static Optional<ArtistsByUserDao> getUserArtist(final QueryAccessor queryAccessor,
+    public static Optional<ArtistsByUserDto> getUserArtist(final QueryAccessor queryAccessor,
                                                            final MappingManager manager, final UUID userId,
                                                            final String timestamp, final UUID artistUuid) {
-        Result<ArtistsByUserDao> results = manager.mapper(ArtistsByUserDao.class)
+        Result<ArtistsByUserDto> results = manager.mapper(ArtistsByUserDto.class)
             .map(queryAccessor.artistsByUser(userId, new Date(Long.parseLong(timestamp)), artistUuid));
         if ( results != null ) {
             return Optional.of(results.one());
@@ -66,9 +66,9 @@ public class ArtistsByUserQuery {
      * Adds an artist to a given userId library
      *
      * @param queryAccessor QueryAccessor
-     * @param artist ArtistsByUserDao
+     * @param artist ArtistsByUserDto
      */
-    public static void add(final QueryAccessor queryAccessor, final ArtistsByUserDao artist) {
+    public static void add(final QueryAccessor queryAccessor, final ArtistsByUserDto artist) {
         queryAccessor.addLibraryArtist(artist.getUserId(), "Artist", new Date(), artist.getArtistId(),
                                        artist.getArtistMbid(), artist.getArtistName(), artist.getImageLink());
     }

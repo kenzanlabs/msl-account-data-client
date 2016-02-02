@@ -3,9 +3,9 @@
  */
 package com.kenzan.msl.account.client.translate;
 
-import com.kenzan.msl.account.client.dao.AlbumsByUserDao;
-import com.kenzan.msl.account.client.dao.ArtistsByUserDao;
-import com.kenzan.msl.account.client.dao.SongsByUserDao;
+import com.kenzan.msl.account.client.dto.AlbumsByUserDto;
+import com.kenzan.msl.account.client.dto.ArtistsByUserDto;
+import com.kenzan.msl.account.client.dto.SongsByUserDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,19 +19,19 @@ public class AccountClientTranslators {
     // ALBUMS
     // ==========================================================================================================
 
-    public static List<AlbumInfo> translateAlbumsByUserDao(Iterable<AlbumsByUserDao> input) {
+    public static List<AlbumInfo> translateAlbumsByUserDto(Iterable<AlbumsByUserDto> input) {
         List<AlbumInfo> output = new ArrayList<>();
-        for ( AlbumsByUserDao dao : input ) {
+        for ( AlbumsByUserDto dto : input ) {
             AlbumInfo albumInfo = new AlbumInfo();
-            albumInfo.setYear(dao.getAlbumYear());
-            albumInfo.setArtistName(dao.getArtistName());
-            albumInfo.setAlbumName(dao.getAlbumName());
-            albumInfo.setAlbumId(dao.getAlbumId() == null ? null : dao.getAlbumId().toString());
-            albumInfo.setArtistId(dao.getArtistId() == null ? null : dao.getArtistId().toString());
-            albumInfo.setArtistMbid(dao.getArtistMbid() == null ? null : dao.getArtistMbid().toString());
-            albumInfo.setFavoritesTimestamp(dao.getFavoritesTimestamp() == null ? null : String.valueOf(dao
+            albumInfo.setYear(dto.getAlbumYear());
+            albumInfo.setArtistName(dto.getArtistName());
+            albumInfo.setAlbumName(dto.getAlbumName());
+            albumInfo.setAlbumId(dto.getAlbumId() == null ? null : dto.getAlbumId().toString());
+            albumInfo.setArtistId(dto.getArtistId() == null ? null : dto.getArtistId().toString());
+            albumInfo.setArtistMbid(dto.getArtistMbid() == null ? null : dto.getArtistMbid().toString());
+            albumInfo.setFavoritesTimestamp(dto.getFavoritesTimestamp() == null ? null : String.valueOf(dto
                 .getFavoritesTimestamp().getTime()));
-            albumInfo.setImageLink(dao.getImageLink());
+            albumInfo.setImageLink(dto.getImageLink());
             output.add(albumInfo);
         }
         return output;
@@ -41,17 +41,17 @@ public class AccountClientTranslators {
     // ARTISTS
     // =========================================================================================================
 
-    public static List<ArtistInfo> translateArtistByUserDao(Iterable<ArtistsByUserDao> input) {
+    public static List<ArtistInfo> translateArtistByUserDto(Iterable<ArtistsByUserDto> input) {
         List<ArtistInfo> output = new ArrayList<>();
 
-        for ( ArtistsByUserDao dao : input ) {
+        for ( ArtistsByUserDto dto : input ) {
             ArtistInfo artistInfo = new ArtistInfo();
-            artistInfo.setArtistName(dao.getArtistName());
-            artistInfo.setArtistId(dao.getArtistId() == null ? null : dao.getArtistId().toString());
-            artistInfo.setArtistMbid(dao.getArtistMbid() == null ? null : dao.getArtistMbid().toString());
-            artistInfo.setFavoritesTimestamp(dao.getFavoritesTimestamp() == null ? null : String.valueOf(dao
+            artistInfo.setArtistName(dto.getArtistName());
+            artistInfo.setArtistId(dto.getArtistId() == null ? null : dto.getArtistId().toString());
+            artistInfo.setArtistMbid(dto.getArtistMbid() == null ? null : dto.getArtistMbid().toString());
+            artistInfo.setFavoritesTimestamp(dto.getFavoritesTimestamp() == null ? null : String.valueOf(dto
                 .getFavoritesTimestamp().getTime()));
-            artistInfo.setImageLink(dao.getImageLink());
+            artistInfo.setImageLink(dto.getImageLink());
             output.add(artistInfo);
         }
         return output;
@@ -61,22 +61,22 @@ public class AccountClientTranslators {
     // SONGS
     // ===========================================================================================================
 
-    public static List<SongInfo> translateSongsByUserDao(Iterable<SongsByUserDao> input) {
+    public static List<SongInfo> translateSongsByUserDto(Iterable<SongsByUserDto> input) {
         List<SongInfo> output = new ArrayList<>();
-        for ( SongsByUserDao dao : input ) {
+        for ( SongsByUserDto dto : input ) {
             SongInfo songInfo = new SongInfo();
-            songInfo.setArtistName(dao.getArtistName());
-            songInfo.setAlbumName(dao.getAlbumName());
-            songInfo.setSongName(dao.getSongName());
-            songInfo.setDuration(dao.getSongDuration());
-            songInfo.setYear(dao.getAlbumYear());
-            songInfo.setSongId(dao.getSongId() == null ? null : dao.getSongId().toString());
-            songInfo.setAlbumId(dao.getAlbumId() == null ? null : dao.getAlbumId().toString());
-            songInfo.setArtistId(dao.getArtistId() == null ? null : dao.getArtistId().toString());
-            songInfo.setArtistMbid(dao.getArtistMbid() == null ? null : dao.getArtistMbid().toString());
-            songInfo.setFavoritesTimestamp(dao.getFavoritesTimestamp() == null ? null : String.valueOf(dao
+            songInfo.setArtistName(dto.getArtistName());
+            songInfo.setAlbumName(dto.getAlbumName());
+            songInfo.setSongName(dto.getSongName());
+            songInfo.setDuration(dto.getSongDuration());
+            songInfo.setYear(dto.getAlbumYear());
+            songInfo.setSongId(dto.getSongId() == null ? null : dto.getSongId().toString());
+            songInfo.setAlbumId(dto.getAlbumId() == null ? null : dto.getAlbumId().toString());
+            songInfo.setArtistId(dto.getArtistId() == null ? null : dto.getArtistId().toString());
+            songInfo.setArtistMbid(dto.getArtistMbid() == null ? null : dto.getArtistMbid().toString());
+            songInfo.setFavoritesTimestamp(dto.getFavoritesTimestamp() == null ? null : String.valueOf(dto
                 .getFavoritesTimestamp().getTime()));
-            songInfo.setImageLink(dao.getImageLink());
+            songInfo.setImageLink(dto.getImageLink());
             output.add(songInfo);
         }
         return output;
