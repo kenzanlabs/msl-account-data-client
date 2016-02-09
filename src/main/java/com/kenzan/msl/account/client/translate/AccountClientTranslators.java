@@ -15,10 +15,12 @@ import io.swagger.model.SongInfo;
 
 public class AccountClientTranslators {
 
-    // ==========================================================================================================
-    // ALBUMS
-    // ==========================================================================================================
-
+    /**
+     * Translates AlbumsDto to AlbumInfo
+     *
+     * @param input AlbumsByUserDto
+     * @return AlbumInfo java.util.List
+     */
     public static List<AlbumInfo> translateAlbumsByUserDto(Iterable<AlbumsByUserDto> input) {
         List<AlbumInfo> output = new ArrayList<>();
         for ( AlbumsByUserDto dto : input ) {
@@ -37,10 +39,12 @@ public class AccountClientTranslators {
         return output;
     }
 
-    // =========================================================================================================
-    // ARTISTS
-    // =========================================================================================================
-
+    /**
+     * Translates ArtistsDto to ArtistInfo
+     *
+     * @param input ArtistsByUserDto
+     * @return ArtistInfo java.util.List
+     */
     public static List<ArtistInfo> translateArtistByUserDto(Iterable<ArtistsByUserDto> input) {
         List<ArtistInfo> output = new ArrayList<>();
 
@@ -57,10 +61,12 @@ public class AccountClientTranslators {
         return output;
     }
 
-    // ===========================================================================================================
-    // SONGS
-    // ===========================================================================================================
-
+    /**
+     * Translates SongsDto to SongInfo
+     *
+     * @param input SongsByUserDto
+     * @return SongInfo java.util.List
+     */
     public static List<SongInfo> translateSongsByUserDto(Iterable<SongsByUserDto> input) {
         List<SongInfo> output = new ArrayList<>();
         for ( SongsByUserDto dto : input ) {
