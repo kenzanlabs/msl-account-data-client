@@ -13,7 +13,7 @@ import java.util.UUID;
 /**
  *
  *
- * @author billschwanitz
+ * @author kenzan
  */
 @Table(name = "user_data_by_user")
 public class UserDataByUserDto {
