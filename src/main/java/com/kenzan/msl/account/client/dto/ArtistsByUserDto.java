@@ -6,12 +6,13 @@ package com.kenzan.msl.account.client.dto;
 import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
+import com.kenzan.msl.common.dto.AbstractArtistDto;
 
 import java.util.Date;
 import java.util.UUID;
 
 @Table(name = "artists_by_user")
-public class ArtistsByUserDto {
+public class ArtistsByUserDto extends AbstractArtistDto {
 
     @PartitionKey(value = 0)
     @Column(name = "user_id")
