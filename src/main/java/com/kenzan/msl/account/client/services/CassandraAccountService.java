@@ -41,7 +41,7 @@ public class CassandraAccountService
 
     private CassandraAccountService() {
         String configUrl = "file://" + System.getProperty("user.dir");
-        configUrl += "/../msl-account-data-client-config/archaius-config.properties";
+        configUrl += "/../msl-account-data-client-config/data-client-config.properties";
         String additionalUrlsProperty = "archaius.configurationSource.additionalUrls";
         System.setProperty(additionalUrlsProperty, configUrl);
 
