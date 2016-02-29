@@ -32,13 +32,13 @@ public class ArtistsByUserQueryTest {
     public void init() {
         queryAccessor = Mockito.mock(QueryAccessor.class);
         when(queryAccessor.artistsByUser(tc.USER_ID, tc.TIMESTAMP, tc.ARTIST_ID))
-                .thenThrow(new RuntimeException("TEST_EXPECTED_EXCEPTION"));
+            .thenThrow(new RuntimeException("TEST_EXPECTED_EXCEPTION"));
     }
 
     @Test(expected = RuntimeException.class)
     public void testGetArtistsByUser() {
         ArtistsByUserQuery.getUserArtist(queryAccessor, mappingManager, tc.USER_ID, Long.toString(LONG_TIMESTAMP),
-                tc.ARTIST_ID);
+                                         tc.ARTIST_ID);
     }
 
     @Test
@@ -50,14 +50,14 @@ public class ArtistsByUserQueryTest {
     @Test
     public void testGetArtistListByUserWithLimitAndTimestamp() {
         ArtistsByUserQuery.getUserArtistList(queryAccessor, tc.USER_ID, Optional.of(Long.toString(LONG_TIMESTAMP)),
-                Optional.of(tc.LIMIT));
+                                             Optional.of(tc.LIMIT));
         verify(queryAccessor, atLeastOnce()).artistsByUser(tc.USER_ID, tc.TIMESTAMP, tc.LIMIT);
     }
 
     @Test
     public void testGetArtistListByUserWithTimestamp() {
         ArtistsByUserQuery.getUserArtistList(queryAccessor, tc.USER_ID, Optional.of(Long.toString(LONG_TIMESTAMP)),
-                Optional.absent());
+                                             Optional.absent());
         verify(queryAccessor, atLeastOnce()).artistsByUser(tc.USER_ID, tc.TIMESTAMP);
     }
 
@@ -71,11 +71,11 @@ public class ArtistsByUserQueryTest {
     public void testAddArtistByUser() {
         ArtistsByUserQuery.add(queryAccessor, tc.ARTIST_BY_USER_DTO);
         verify(queryAccessor, atLeastOnce()).addLibraryArtist(eq(tc.ARTIST_BY_USER_DTO.getUserId()),
-                eq(tc.ARTIST_BY_USER_DTO.getContentType()),
-                any(Date.class), eq(tc.ARTIST_BY_USER_DTO.getArtistId()),
-                eq(tc.ARTIST_BY_USER_DTO.getArtistMbid()),
-                eq(tc.ARTIST_BY_USER_DTO.getArtistName()),
-                eq(tc.ARTIST_BY_USER_DTO.getImageLink()));
+                                                              eq(tc.ARTIST_BY_USER_DTO.getContentType()),
+                                                              any(Date.class), eq(tc.ARTIST_BY_USER_DTO.getArtistId()),
+                                                              eq(tc.ARTIST_BY_USER_DTO.getArtistMbid()),
+                                                              eq(tc.ARTIST_BY_USER_DTO.getArtistName()),
+                                                              eq(tc.ARTIST_BY_USER_DTO.getImageLink()));
     }
 
     @Test(expected = Exception.class)

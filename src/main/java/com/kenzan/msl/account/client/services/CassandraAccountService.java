@@ -72,6 +72,7 @@ public class CassandraAccountService
      * Adds or update a user
      *
      * @param user UserDto
+     * @return Observable&lt;Void&gt;
      */
     public Observable<Void> addOrUpdateUser(UserDto user) {
         UserQuery.add(queryAccessor, user);
@@ -82,7 +83,7 @@ public class CassandraAccountService
      * Retrieves a specific user by its userId
      *
      * @param username String
-     * @return UserDto
+     * @return Observable&lt;UserDto&gt;
      */
     public Observable<UserDto> getUser(String username) {
         Optional<UserDto> results = UserQuery.get(queryAccessor, mappingManager, username);
@@ -96,6 +97,7 @@ public class CassandraAccountService
      * Deletes a user by its userId
      *
      * @param username String
+     * @return Observable&lt;Void&gt;
      */
     public Observable<Void> deleteUser(String username) {
         UserQuery.remove(queryAccessor, username);
@@ -113,6 +115,7 @@ public class CassandraAccountService
      * Adds a song to a given userId library
      *
      * @param song SongsByUserDto
+     * @return Observable&lt;Void&gt;
      */
     public Observable<Void> addOrUpdateSongsByUser(SongsByUserDto song) {
         SongsByUserQuery.add(queryAccessor, song);
@@ -125,7 +128,7 @@ public class CassandraAccountService
      * @param userId java.util.UUID
      * @param timestamp String
      * @param songUuid java.util.UUID
-     * @return SongsByUserDto
+     * @return Observable&lt;SongsByUserDto&gt;
      */
     public Observable<SongsByUserDto> getSongsByUser(UUID userId, String timestamp, UUID songUuid) {
         Optional<SongsByUserDto> results = SongsByUserQuery.getUserSong(queryAccessor, mappingManager, userId,
@@ -143,7 +146,7 @@ public class CassandraAccountService
      * @param userId java.util.UUID
      * @param timestamp String
      * @param limit Integer
-     * @return com.datastax.driver.core.ResultSet
+     * @return Observable&lt;ResultSet&gt;
      */
     public Observable<ResultSet> getSongsByUser(UUID userId, Optional<String> timestamp, Optional<Integer> limit) {
         return Observable.just(SongsByUserQuery.getUserSongList(queryAccessor, userId, timestamp, limit));
@@ -153,7 +156,7 @@ public class CassandraAccountService
      * Maps a resultSet object into a SongsByUser result array
      *
      * @param object com.datastax.driver.core.ResultSet
-     * @return Observable<Result<SongsByUserDto>>
+     * @return Observable&lt;Result&lt;SongsByUserDto&gt;&gt;
      */
     public Observable<Result<SongsByUserDto>> mapSongsByUser(Observable<ResultSet> object) {
         return Observable.just(mappingManager.mapper(SongsByUserDto.class).map(object.toBlocking().first()));
@@ -165,6 +168,7 @@ public class CassandraAccountService
      * @param userId userId java.util.UUID
      * @param timestamp String
      * @param songUuid userId java.util.UUID
+     * @return Observable &lt;Void&gt;
      */
     public Observable<Void> deleteSongsByUser(UUID userId, Date timestamp, UUID songUuid) {
         SongsByUserQuery.remove(queryAccessor, userId, timestamp, songUuid);
@@ -181,6 +185,7 @@ public class CassandraAccountService
      * Adds an album to a given userId library
      *
      * @param album AlbumsByUserDto
+     * @return Observable &lt;Void&gt;
      */
     public Observable<Void> addOrUpdateAlbumsByUser(AlbumsByUserDto album) {
         AlbumsByUserQuery.add(queryAccessor, album);
@@ -193,7 +198,7 @@ public class CassandraAccountService
      * @param userId java.util.UUID
      * @param timestamp String
      * @param albumUuid java.util.UUID
-     * @return AlbumsByUserDto
+     * @return Observable&lt;AlbumsByUserDto&gt;
      */
     public Observable<AlbumsByUserDto> getAlbumsByUser(UUID userId, String timestamp, UUID albumUuid) {
         Optional<AlbumsByUserDto> results = AlbumsByUserQuery.getUserAlbum(queryAccessor, mappingManager, userId,
@@ -211,7 +216,7 @@ public class CassandraAccountService
      * @param userId java.util.UUID
      * @param timestamp String
      * @param limit Integer
-     * @return com.datastax.driver.core.ResultSet
+     * @return Observable&lt;ResultSet&gt;
      */
     public Observable<ResultSet> getAlbumsByUser(UUID userId, Optional<String> timestamp, Optional<Integer> limit) {
         return Observable.just(AlbumsByUserQuery.getUserAlbumList(queryAccessor, userId, timestamp, limit));
@@ -221,7 +226,7 @@ public class CassandraAccountService
      * Maps a resultSet object into a albumsByUserDto result array
      *
      * @param object com.datastax.driver.core.ResultSet
-     * @return Observable<Result<AlbumsByUserDto>>
+     * @return Observable&lt;Result&lt;AlbumsByUserDto&gt;&gt;
      */
     public Observable<Result<AlbumsByUserDto>> mapAlbumsByUser(Observable<ResultSet> object) {
         return Observable.just(mappingManager.mapper(AlbumsByUserDto.class).map(object.toBlocking().first()));
@@ -233,6 +238,7 @@ public class CassandraAccountService
      * @param userId userId java.util.UUID
      * @param timestamp String
      * @param albumUuid userId java.util.UUID
+     * @return Observable&lt;Void&gt;
      */
     public Observable<Void> deleteAlbumsByUser(UUID userId, Date timestamp, UUID albumUuid) {
         AlbumsByUserQuery.remove(queryAccessor, userId, timestamp, albumUuid);
@@ -249,6 +255,7 @@ public class CassandraAccountService
      * Adds an artist to a given userId library
      *
      * @param artist ArtistsByUserDto
+     * @return Observable&lt;Void&gt;
      */
     public Observable<Void> addOrUpdateArtistsByUser(ArtistsByUserDto artist) {
         ArtistsByUserQuery.add(queryAccessor, artist);
@@ -261,7 +268,7 @@ public class CassandraAccountService
      * @param userId java.util.UUID
      * @param timestamp String
      * @param artistUuid java.util.UUID
-     * @return ArtistsByUserDto
+     * @return Observable&lt;ArtistsByUserDto&gt;
      */
     public Observable<ArtistsByUserDto> getArtistsByUser(UUID userId, String timestamp, UUID artistUuid) {
         Optional<ArtistsByUserDto> results = ArtistsByUserQuery.getUserArtist(queryAccessor, mappingManager, userId,
@@ -279,7 +286,7 @@ public class CassandraAccountService
      * @param userId java.util.UUID
      * @param timestamp String
      * @param limit Integer
-     * @return com.datastax.driver.core.ResultSet
+     * @return Observable&lt;ResultSet&gt;
      */
     public Observable<ResultSet> getArtistsByUser(UUID userId, Optional<String> timestamp, Optional<Integer> limit) {
         return Observable.just(ArtistsByUserQuery.getUserArtistList(queryAccessor, userId, timestamp, limit));
@@ -289,7 +296,7 @@ public class CassandraAccountService
      * Maps a resultSet object into a artistsByUserDto result array
      *
      * @param object com.datastax.driver.core.ResultSet
-     * @return Observable<Result<ArtistsByUserDto>>
+     * @return Observable&lt;Result&lt;ArtistsByUserDto&gt;&gt;
      */
     public Observable<Result<ArtistsByUserDto>> mapArtistByUser(Observable<ResultSet> object) {
         return Observable.just(mappingManager.mapper(ArtistsByUserDto.class).map(object.toBlocking().first()));
