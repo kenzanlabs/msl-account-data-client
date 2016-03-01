@@ -32,19 +32,19 @@ public class AlbumsByUserQueryTest {
     public void init() {
         queryAccessor = mock(QueryAccessor.class);
         when(queryAccessor.albumsByUser(tc.USER_ID, tc.TIMESTAMP, tc.ALBUM_ID))
-                .thenThrow(new RuntimeException("TEST_EXPECTED_EXCEPTION"));
+            .thenThrow(new RuntimeException("TEST_EXPECTED_EXCEPTION"));
     }
 
     @Test(expected = RuntimeException.class)
     public void testGetAlbumsByUser() {
         AlbumsByUserQuery.getUserAlbum(queryAccessor, mappingManager, tc.USER_ID, Long.toString(LONG_TIMESTAMP),
-                tc.ALBUM_ID);
+                                       tc.ALBUM_ID);
     }
 
     @Test
     public void testGetAlbumListByUserWithTimeStampAndLimit() {
         AlbumsByUserQuery.getUserAlbumList(queryAccessor, tc.USER_ID, Optional.of(Long.toString(LONG_TIMESTAMP)),
-                Optional.of(tc.LIMIT));
+                                           Optional.of(tc.LIMIT));
         verify(queryAccessor, atLeastOnce()).albumsByUser(tc.USER_ID, tc.TIMESTAMP, tc.LIMIT);
     }
 
@@ -57,7 +57,7 @@ public class AlbumsByUserQueryTest {
     @Test
     public void testGetAlbumListByUserWithTimestamp() {
         AlbumsByUserQuery.getUserAlbumList(queryAccessor, tc.USER_ID, Optional.of(Long.toString(LONG_TIMESTAMP)),
-                Optional.absent());
+                                           Optional.absent());
         verify(queryAccessor, atLeastOnce()).albumsByUser(tc.USER_ID, tc.TIMESTAMP);
     }
 
@@ -71,14 +71,14 @@ public class AlbumsByUserQueryTest {
     public void testAddAlbumByUser() {
         AlbumsByUserQuery.add(queryAccessor, tc.ALBUM_BY_USER_DTO);
         verify(queryAccessor, atLeastOnce()).addLibraryAlbum(eq(tc.ALBUM_BY_USER_DTO.getUserId()),
-                eq(tc.ALBUM_BY_USER_DTO.getContentType()),
-                any(Date.class), eq(tc.ALBUM_BY_USER_DTO.getAlbumId()),
-                eq(tc.ALBUM_BY_USER_DTO.getAlbumName()),
-                eq(tc.ALBUM_BY_USER_DTO.getAlbumYear()),
-                eq(tc.ALBUM_BY_USER_DTO.getArtistId()),
-                eq(tc.ALBUM_BY_USER_DTO.getArtistMbid()),
-                eq(tc.ALBUM_BY_USER_DTO.getArtistName()),
-                eq(tc.ALBUM_BY_USER_DTO.getImageLink()));
+                                                             eq(tc.ALBUM_BY_USER_DTO.getContentType()),
+                                                             any(Date.class), eq(tc.ALBUM_BY_USER_DTO.getAlbumId()),
+                                                             eq(tc.ALBUM_BY_USER_DTO.getAlbumName()),
+                                                             eq(tc.ALBUM_BY_USER_DTO.getAlbumYear()),
+                                                             eq(tc.ALBUM_BY_USER_DTO.getArtistId()),
+                                                             eq(tc.ALBUM_BY_USER_DTO.getArtistMbid()),
+                                                             eq(tc.ALBUM_BY_USER_DTO.getArtistName()),
+                                                             eq(tc.ALBUM_BY_USER_DTO.getImageLink()));
     }
 
     @Test(expected = Exception.class)
