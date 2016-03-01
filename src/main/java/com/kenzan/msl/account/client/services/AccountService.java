@@ -19,7 +19,9 @@ public interface AccountService {
 
   Observable<Void> addOrUpdateUser(UserDto user);
 
-  Observable<UserDto> getUser(String username);
+  Observable<UserDto> getUserByUsername(String username);
+
+  Observable<UserDto> getUserByUUID(UUID id);
 
   Observable<Void> deleteUser(String username);
 
