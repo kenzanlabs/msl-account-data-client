@@ -21,6 +21,9 @@ public interface QueryAccessor {
   @Query("SELECT * FROM users WHERE username = :username")
   public ResultSet getUser(@Param("username") String username);
 
+  @Query("SELECT * FROM users WHERE user_id = :user_id")
+  public ResultSet getUser(@Param("user_id") UUID user_id);
+
   @Query("DELETE FROM users WHERE username = :username")
   public void deleteUser(@Param("username") String username);
 
