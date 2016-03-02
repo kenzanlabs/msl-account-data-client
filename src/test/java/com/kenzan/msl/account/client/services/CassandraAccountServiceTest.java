@@ -94,7 +94,7 @@ public class CassandraAccountServiceTest {
             Mockito.eq(tc.USERNAME))).thenReturn(Optional.of(tc.USER_DTO));
     PowerMock.replayAll();
     cassandraAccountService = CassandraAccountService.getInstance();
-    Observable<UserDto> results = cassandraAccountService.getUser(tc.USERNAME);
+    Observable<UserDto> results = cassandraAccountService.getUserByUsername(tc.USERNAME);
     assertEquals(results.toBlocking().first(), tc.USER_DTO);
   }
 
