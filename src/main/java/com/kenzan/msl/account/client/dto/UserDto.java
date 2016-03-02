@@ -12,46 +12,46 @@ import java.util.UUID;
 
 @Table(name = "users")
 public class UserDto {
-    @PartitionKey(value = 0)
-    @Column(name = "username")
-    private String username;
-    @Column(name = "creation_timestamp")
-    private Date creationTimestamp;
-    @Column(name = "password")
-    private String password;
-    @Column(name = "user_id")
-    private UUID userId;
+  @PartitionKey(value = 0)
+  @Column(name = "username")
+  private String username;
+  @Column(name = "creation_timestamp")
+  private Date creationTimestamp;
+  @Column(name = "password")
+  private String password;
+  @Column(name = "user_id")
+  private UUID userId;
 
-    public String getUsername() {
-        return username;
-    }
+  public String getUsername() {
+    return username;
+  }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+  public void setUsername(String username) {
+    this.username = username;
+  }
 
-    public Date getCreationTimestamp() {
-        return creationTimestamp;
-    }
+  public Date getCreationTimestamp() {
+    return creationTimestamp;
+  }
 
-    public void setCreationTimestamp(Date creationTimestamp) {
-        this.creationTimestamp = creationTimestamp;
-    }
+  public void setCreationTimestamp(Date creationTimestamp) {
+    this.creationTimestamp = creationTimestamp;
+  }
 
-    public String getPassword() {
-        return password;
-    }
+  public String getPassword() {
+    return password;
+  }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+  public void setPassword(String password) {
+    this.password = password;
+  }
 
-    public UUID getUserId() {
-        return userId;
-    }
+  public UUID getUserId() {
+    return userId;
+  }
 
-    public void setUserId(UUID userId) {
-        this.userId = userId;
-    }
+  public void setUserId(UUID userId) {
+    this.userId = userId;
+  }
 
 }
