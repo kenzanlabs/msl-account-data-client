@@ -26,6 +26,7 @@ public class UserQuery {
    * Retrieves a user by username
    *
    * @param queryAccessor QueryAccessor
+   * @param manager MappingManager
    * @param username String
    * @return Optional&lt;UserDto&gt;
    */
@@ -47,6 +48,7 @@ public class UserQuery {
    * Retrieves a user by username
    *
    * @param queryAccessor QueryAccessor
+   * @param manager MappingManager
    * @param id UUID
    * @return Optional&lt;UserDto&gt;
    */
