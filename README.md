@@ -1,56 +1,45 @@
-# MSL account data client
+# MSL Account Data Client
+
+This repository is a sub-repository of the [Kenzan Million Song Library](https://github.com/kenzanmedia/million-song-library) (MSL) project, a microservices-based Web application built using [AngularJS](https://angularjs.org/), a [Cassandra](http://cassandra.apache.org/) NoSQL database, and [Netflix OSS](http://netflix.github.io/) tools.
+
+> **NOTE:** For an overview of the Million Song Library microservices architecture, as well as step-by-step instructions for running the MSL demonstration, see the [Million Song Library Project Documentation](https://github.com/kenzanmedia/million-song-library/tree/develop/docs).
 
 ## Overview
-Data Client Layer
-Simplification to a traditional edge/middle architecture, this project uses a edge/data client architecture instead.
-The data clients are jars, each containing all the methods and DTOs for accessing all the tables within a Cassandra cluster.
-To enhance scalability and configuration flexibility, the Cassandra tables are split into three independent clusters: account, catalog, and rating.
-Each of these clusters has a data client jar dedicated to accessing it: account-data-client, catalog-data-client, and rating-data-client, respectively.
 
-So a microservice that needs to access Cassandra data will include one or more of the data client jars.
+Instead of a traditional edge/middle architecture, the Million Song Library project uses a simplified edge/data client architecture.
 
-| Table           | Method  |
-|:-------------:| -----:|
-| **users** | Observable<Void> addOrUpdateUser(UserDto) |
-| | Observable<UserDto> getUser(UUID userUuid) |
-| | Observable<Void> deleteUser(UUID userUuid) |
-| **songs_by_user** | Observable<Void> addOrUpdateSongsByUser(SongsByUserDto) |
-| | Observable<SongsByUserDto> getSongsByUser(UUID userId, String favoritesTimestamp, UUID songUuid) |
-| | Observable<ResultSet> getSongsByUser(UUID userId, Optional<String >favoritesTimestamp, Optional<Integer> limit) |
-| | Observable<Result<SongsByUserDyo>> map(Observable<ResultSet>) |
-| | Observable<Void> deleteSongsByUser(UUID userId, String favoritesTimestamp, UUID songUuid) |
-| **albums_by_user** | Observable<Void> addOrUpdateAlbumsByUser(AlbumsByUserDto) |
-| | Observable<AlbumsByUserDto> getAlbumsByUser(UUID userId, String favoritesTimestamp, UUID albumUuid) |
-| | Observable<ResultSet> getAlbumsByUser(UUID userId, Optional<String> favoritesTimestamp, Optional<Integer> limit) |
-| | Observable<Result<AlbumsByUserDto>> map(Observable<ResultSet>) |
-| | Observable<Void> deleteAlbumsByUser(UUID userId, String favoritesTimestamp, UUID albumUuid) |
-| **artists_by_user** | Observable<Void> addOrUpdateArtistsByUser(ArtistsByUserDto) |
-| | Observable<ArtistsByUserDto> getArtistsByUser(UUID userId, String favoritesTimestamp, UUID artistUuid) |
-| | Observable<ResultSet> getArtistsByUser(UUID userId, Optional<String> favoritesTimestamp, Optional<Integer> limit) |
-| | Observable<Result<ArtistsByUserDto>> map(Observable<ResultSet>) |
-| | Observable<Void> deleteArtistsByUser(UUID userId, String favoritesTimestamp, UUID artistUuid) |
+The data clients are JARs, each one containing the methods and data transfer objects (DTOs) needed to access all of the tables in a Cassandra cluster.
 
-## Packaging & Installation
+To enhance scalability and configuration flexibility, the Cassandra tables are split into three independent clusters: account, catalog, and rating. Each of these clusters has a data client JAR dedicated to accessing it: account-data-client, catalog-data-client, and rating-data-client, respectively. This means that a microservice that needs to access Cassandra data will include one or more of the data client JARs.
 
-```bash 
+> **NOTE:** If you receive an error when running any of the commands below, try using `sudo` (Mac and Linux) or run PowerShell as an administrator (Windows).
+
+## Packaging and Installation
+
+Use the following command to package and compile the application code:
+
+```
 mvn clean package && mvn -P install compile
 ```
 
-To format code
+## Code Formatting
+
+If you make changes to the application code, use the following command to format the code according to [project styles and standards](https://github.com/kenzanmedia/styleguide):
+
 ```
 mvn clean formatter:format
 ```
 
-##Reports
-###Surefire reports:
-```
-mvn site
-```
-report gets generated under /target/site/index.html
- 
-###Cobertura
+## Testing and Reports
+
+Use the following command to run all unit tests and generate a report on test coverage (report is located in `/target/site/cobertura/index.html`):
+
 ```
 mvn cobertura:cobertura
 ```
-report gets generated under /target/site/cobertura/index.html
 
+Use the following command to run all unit tests without generating a report:
+
+```
+mvn test
+```
