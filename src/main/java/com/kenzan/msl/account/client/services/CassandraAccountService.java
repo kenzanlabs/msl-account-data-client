@@ -3,6 +3,7 @@
  */
 package com.kenzan.msl.account.client.services;
 
+import com.kenzan.msl.account.client.archaius.ArchaiusHelper;
 import com.netflix.config.DynamicPropertyFactory;
 import com.netflix.config.DynamicStringProperty;
 import com.datastax.driver.core.Cluster;
@@ -23,6 +24,8 @@ import com.kenzan.msl.account.client.dto.UserDto;
 import rx.Observable;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -35,33 +38,55 @@ public class CassandraAccountService implements AccountService {
 
   private static final String DEFAULT_CONTACT_POINT = "127.0.0.1";
   private static final String DEFAULT_MSL_KEYSPACE = "msl";
+  private static final String DEFAULT_MSL_REGION = "us-west-2";
 
   private static CassandraAccountService instance = null;
 
-  private CassandraAccountService() {
-    String configUrl = "file://" + System.getProperty("user.dir");
-    configUrl += "/../msl-account-data-client-config/data-client-config.properties";
-    String additionalUrlsProperty = "archaius.configurationSource.additionalUrls";
-    System.setProperty(additionalUrlsProperty, configUrl);
+  private CassandraAccountService(HashMap<String, Optional<String>> archaiusProperties) {
+    ArchaiusHelper.setupArchaius();
 
     DynamicPropertyFactory propertyFactory = DynamicPropertyFactory.getInstance();
     DynamicStringProperty contactPoint =
         propertyFactory.getStringProperty("contact_point", DEFAULT_CONTACT_POINT);
-    Cluster cluster = Cluster.builder().addContactPoint(contactPoint.getValue()).build();
 
     DynamicStringProperty keyspace =
         propertyFactory.getStringProperty("keyspace", DEFAULT_MSL_KEYSPACE);
+
+    DynamicStringProperty region =
+            propertyFactory.getStringProperty("region", DEFAULT_MSL_REGION);
+
+    String region2 = "" , domainName = "";
+
+    for (Map.Entry<String, Optional<String>> entry : archaiusProperties.entrySet()) {
+      if (entry.getValue().isPresent()) {
+        switch(entry.getKey()) {
+          case "region":
+            region2 = entry.getValue().get();
+            break;
+          case "domainName":
+            domainName = entry.getValue().get();
+            break;
+        }
+      }
+    }
+
+    Cluster cluster = Cluster.builder().addContactPoint(domainName.isEmpty() ? contactPoint.getValue() : domainName).build();
     Session session = cluster.connect(keyspace.getValue());
 
     mappingManager = new MappingManager(session);
     queryAccessor = mappingManager.createAccessor(QueryAccessor.class);
   }
 
-  public static CassandraAccountService getInstance() {
+  public static CassandraAccountService getInstance(HashMap<String, Optional<String>> archaiusProperties) {
     if (instance == null) {
-      instance = new CassandraAccountService();
+      instance = new CassandraAccountService(archaiusProperties);
     }
     return instance;
+  }
+
+  public static CassandraAccountService getInstance() {
+    HashMap<String, Optional<String>> archaiusProperties = new HashMap<>();
+    return getInstance(archaiusProperties);
   }
 
   /*
