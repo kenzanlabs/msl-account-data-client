@@ -21,6 +21,7 @@ import com.kenzan.msl.account.client.dto.AlbumsByUserDto;
 import com.kenzan.msl.account.client.dto.ArtistsByUserDto;
 import com.kenzan.msl.account.client.dto.SongsByUserDto;
 import com.kenzan.msl.account.client.dto.UserDto;
+import org.codehaus.plexus.util.StringUtils;
 import rx.Observable;
 
 import java.util.Date;
@@ -36,63 +37,77 @@ public class CassandraAccountService implements AccountService {
   private QueryAccessor queryAccessor;
   private MappingManager mappingManager;
 
-  private static final String DEFAULT_CONTACT_POINT = "127.0.0.1";
   private static final String DEFAULT_MSL_KEYSPACE = "msl";
   private static final String DEFAULT_MSL_REGION = "us-west-2";
+  private static final String DEFAULT_CLUSTER = "127.0.0.1";
 
   private static CassandraAccountService instance = null;
 
-  private CassandraAccountService(HashMap<String, Optional<String>> archaiusProperties) {
-    ArchaiusHelper.setupArchaius();
+  private static DynamicStringProperty domain;
+  private static DynamicStringProperty keyspace;
+  private static DynamicStringProperty region;
 
-    DynamicPropertyFactory propertyFactory = DynamicPropertyFactory.getInstance();
-    DynamicStringProperty contactPoint =
-        propertyFactory.getStringProperty("contact_point", DEFAULT_CONTACT_POINT);
-
-    DynamicStringProperty keyspace =
-        propertyFactory.getStringProperty("keyspace", DEFAULT_MSL_KEYSPACE);
-
-    DynamicStringProperty region =
-            propertyFactory.getStringProperty("region", DEFAULT_MSL_REGION);
-
-    String region2 = "" , domainName = "";
-
-    for (Map.Entry<String, Optional<String>> entry : archaiusProperties.entrySet()) {
-      if (entry.getValue().isPresent()) {
-        switch(entry.getKey()) {
-          case "region":
-            region2 = entry.getValue().get();
-            break;
-          case "domainName":
-            domainName = entry.getValue().get();
-            break;
-        }
+  private CassandraAccountService() {
+    Cluster.Builder builder = Cluster.builder();
+    String domainValue = domain.getValue();
+    if (StringUtils.isNotEmpty(domainValue)) {
+      String[] clusterNodes = StringUtils.split(domainValue, ",");
+      for (String node : clusterNodes) {
+        builder.addContactPoint(node);
       }
     }
 
-    Cluster cluster = Cluster.builder().addContactPoint(domainName.isEmpty() ? contactPoint.getValue() : domainName).build();
+    Cluster cluster = builder.build();
     Session session = cluster.connect(keyspace.getValue());
 
     mappingManager = new MappingManager(session);
     queryAccessor = mappingManager.createAccessor(QueryAccessor.class);
   }
 
-  public static CassandraAccountService getInstance(HashMap<String, Optional<String>> archaiusProperties) {
+
+  public static CassandraAccountService getInstance(Optional<HashMap<String, Optional<String>>> archaiusProperties) {
     if (instance == null) {
-      instance = new CassandraAccountService(archaiusProperties);
+      initializeDynamicProperties(archaiusProperties);
+      instance = new CassandraAccountService();
     }
     return instance;
   }
 
   public static CassandraAccountService getInstance() {
-    HashMap<String, Optional<String>> archaiusProperties = new HashMap<>();
-    return getInstance(archaiusProperties);
+    return getInstance(Optional.absent());
+  }
+
+  private static void initializeDynamicProperties(Optional<HashMap<String, Optional<String>>> archaiusProperties) {
+    ArchaiusHelper.setupArchaius();
+    DynamicPropertyFactory propertyFactory = DynamicPropertyFactory.getInstance();
+
+    keyspace = propertyFactory.getStringProperty("keyspace", DEFAULT_MSL_KEYSPACE);
+    region = propertyFactory.getStringProperty("region", DEFAULT_MSL_REGION);
+
+    String regionValue = "", domainName = "";
+    if (archaiusProperties.isPresent()) {
+      for (Map.Entry<String, Optional<String>> entry : archaiusProperties.get().entrySet()) {
+        if (entry.getValue().isPresent()) {
+          switch (entry.getKey()) {
+            case "region":
+              regionValue = entry.getValue().get();
+              break;
+            case "domainName":
+              domainName = entry.getValue().get();
+              break;
+          }
+        }
+      }
+    }
+
+    domain = propertyFactory.getStringProperty(StringUtils.isNotEmpty(domainName) ? domainName : "local", DEFAULT_CLUSTER);
   }
 
   /*
    * ==============================================================================================
    * USER ==========================================================================================
    */
+
   /**
    * Adds or update a user
    *
@@ -136,7 +151,7 @@ public class CassandraAccountService implements AccountService {
   }
 
   /*
-   * 
+   *
    * ======================================================================================== SONGS
    * BY USER
    * ========================================================================================
@@ -155,14 +170,14 @@ public class CassandraAccountService implements AccountService {
   /**
    * Retrieves a song from a user library given a userId, songId and a timestamp
    *
-   * @param userId java.util.UUID
+   * @param userId    java.util.UUID
    * @param timestamp String
-   * @param songUuid java.util.UUID
+   * @param songUuid  java.util.UUID
    * @return Observable&lt;SongsByUserDto&gt;
    */
   public Observable<SongsByUserDto> getSongsByUser(UUID userId, String timestamp, UUID songUuid) {
     Optional<SongsByUserDto> results =
-        SongsByUserQuery.getUserSong(queryAccessor, mappingManager, userId, timestamp, songUuid);
+      SongsByUserQuery.getUserSong(queryAccessor, mappingManager, userId, timestamp, songUuid);
     if (results.isPresent()) {
       return Observable.just(results.get());
     }
@@ -173,15 +188,15 @@ public class CassandraAccountService implements AccountService {
    * Retrieves a resultSet of songs from a user library given a userId and optionally a timestamp
    * and limit of results
    *
-   * @param userId java.util.UUID
+   * @param userId    java.util.UUID
    * @param timestamp String
-   * @param limit Integer
+   * @param limit     Integer
    * @return Observable&lt;ResultSet&gt;
    */
   public Observable<ResultSet> getSongsByUser(UUID userId, Optional<String> timestamp,
-      Optional<Integer> limit) {
+                                              Optional<Integer> limit) {
     return Observable.just(SongsByUserQuery
-        .getUserSongList(queryAccessor, userId, timestamp, limit));
+      .getUserSongList(queryAccessor, userId, timestamp, limit));
   }
 
   /**
@@ -192,15 +207,15 @@ public class CassandraAccountService implements AccountService {
    */
   public Observable<Result<SongsByUserDto>> mapSongsByUser(Observable<ResultSet> object) {
     return Observable.just(mappingManager.mapper(SongsByUserDto.class).map(
-        object.toBlocking().first()));
+      object.toBlocking().first()));
   }
 
   /**
    * Removes a given song from a user library given a userId, the songId and the song timestamp
    *
-   * @param userId userId java.util.UUID
+   * @param userId    userId java.util.UUID
    * @param timestamp String
-   * @param songUuid userId java.util.UUID
+   * @param songUuid  userId java.util.UUID
    * @return Observable&lt;Void&gt;
    */
   public Observable<Void> deleteSongsByUser(UUID userId, Date timestamp, UUID songUuid) {
@@ -227,14 +242,14 @@ public class CassandraAccountService implements AccountService {
   /**
    * Retrieves a album from a user library given a userId, albumId and a timestamp
    *
-   * @param userId java.util.UUID
+   * @param userId    java.util.UUID
    * @param timestamp String
    * @param albumUuid java.util.UUID
    * @return Observable&lt;AlbumsByUserDto&gt;
    */
   public Observable<AlbumsByUserDto> getAlbumsByUser(UUID userId, String timestamp, UUID albumUuid) {
     Optional<AlbumsByUserDto> results =
-        AlbumsByUserQuery.getUserAlbum(queryAccessor, mappingManager, userId, timestamp, albumUuid);
+      AlbumsByUserQuery.getUserAlbum(queryAccessor, mappingManager, userId, timestamp, albumUuid);
     if (results.isPresent()) {
       return Observable.just(results.get());
     }
@@ -245,15 +260,15 @@ public class CassandraAccountService implements AccountService {
    * Retrieves a resultSet of albums from a user library given a userId and optionally a timestamp
    * and limit of results
    *
-   * @param userId java.util.UUID
+   * @param userId    java.util.UUID
    * @param timestamp String
-   * @param limit Integer
+   * @param limit     Integer
    * @return Observable&lt;ResultSet&gt;
    */
   public Observable<ResultSet> getAlbumsByUser(UUID userId, Optional<String> timestamp,
-      Optional<Integer> limit) {
+                                               Optional<Integer> limit) {
     return Observable.just(AlbumsByUserQuery.getUserAlbumList(queryAccessor, userId, timestamp,
-        limit));
+      limit));
   }
 
   /**
@@ -264,13 +279,13 @@ public class CassandraAccountService implements AccountService {
    */
   public Observable<Result<AlbumsByUserDto>> mapAlbumsByUser(Observable<ResultSet> object) {
     return Observable.just(mappingManager.mapper(AlbumsByUserDto.class).map(
-        object.toBlocking().first()));
+      object.toBlocking().first()));
   }
 
   /**
    * Removes a given album from a user library given a userId, the albumId and the album timestamp
    *
-   * @param userId userId java.util.UUID
+   * @param userId    userId java.util.UUID
    * @param timestamp String
    * @param albumUuid userId java.util.UUID
    * @return Observable&lt;Void&gt;
@@ -299,16 +314,16 @@ public class CassandraAccountService implements AccountService {
   /**
    * Retrieves a artist from a user library given a userId, artistId and a timestamp
    *
-   * @param userId java.util.UUID
-   * @param timestamp String
+   * @param userId     java.util.UUID
+   * @param timestamp  String
    * @param artistUuid java.util.UUID
    * @return Observable&lt;ArtistsByUserDto&gt;
    */
   public Observable<ArtistsByUserDto> getArtistsByUser(UUID userId, String timestamp,
-      UUID artistUuid) {
+                                                       UUID artistUuid) {
     Optional<ArtistsByUserDto> results =
-        ArtistsByUserQuery.getUserArtist(queryAccessor, mappingManager, userId, timestamp,
-            artistUuid);
+      ArtistsByUserQuery.getUserArtist(queryAccessor, mappingManager, userId, timestamp,
+        artistUuid);
     if (results.isPresent()) {
       return Observable.just(results.get());
     }
@@ -319,15 +334,15 @@ public class CassandraAccountService implements AccountService {
    * Retrieves a resultSet of artists from a user library given a userId and optionally a timestamp
    * and limit of results
    *
-   * @param userId java.util.UUID
+   * @param userId    java.util.UUID
    * @param timestamp String
-   * @param limit Integer
+   * @param limit     Integer
    * @return Observable&lt;ResultSet&gt;
    */
   public Observable<ResultSet> getArtistsByUser(UUID userId, Optional<String> timestamp,
-      Optional<Integer> limit) {
+                                                Optional<Integer> limit) {
     return Observable.just(ArtistsByUserQuery.getUserArtistList(queryAccessor, userId, timestamp,
-        limit));
+      limit));
   }
 
   /**
@@ -338,15 +353,15 @@ public class CassandraAccountService implements AccountService {
    */
   public Observable<Result<ArtistsByUserDto>> mapArtistByUser(Observable<ResultSet> object) {
     return Observable.just(mappingManager.mapper(ArtistsByUserDto.class).map(
-        object.toBlocking().first()));
+      object.toBlocking().first()));
   }
 
   /**
    * Removes a given artist from a user library given a userId, the artistId and the artist
    * timestamp
    *
-   * @param userId java.util.UUID
-   * @param timestamp String
+   * @param userId     java.util.UUID
+   * @param timestamp  String
    * @param artistUuid java.util.UUID
    * @return Observable&lt;Void&gt;
    */
