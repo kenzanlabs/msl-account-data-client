@@ -17,7 +17,6 @@ import com.kenzan.msl.account.client.dto.AlbumsByUserDto;
 import com.kenzan.msl.account.client.dto.ArtistsByUserDto;
 import com.kenzan.msl.account.client.dto.SongsByUserDto;
 import com.kenzan.msl.account.client.dto.UserDto;
-import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,31 +34,19 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({UserQuery.class, SongsByUserQuery.class, AlbumsByUserQuery.class,
-    ArtistsByUserQuery.class, CassandraAccountService.class, Session.class, Cluster.class,
+    ArtistsByUserQuery.class, AccountDataClientServiceImpl.class, Session.class, Cluster.class,
     MappingManager.class})
-public class CassandraAccountServiceTest {
+public class AccountDataClientServiceImplTest {
 
   private TestConstants tc = TestConstants.getInstance();
-  private CassandraAccountService cassandraAccountService;
+  private AccountDataClientServiceImpl accountDataClientService;
   private ResultSet resultSet;
   private MappingManager manager;
 
   @Before
   public void init() throws Exception {
     resultSet = createMock(ResultSet.class);
-
-    Session session = PowerMock.createMock(Session.class);
-    Cluster cluster = PowerMock.createMock(Cluster.class);
-    Cluster.Builder builder = PowerMock.createMock(Cluster.Builder.class);
-
-    PowerMock.mockStatic(Cluster.class);
-    EasyMock.expect(Cluster.builder()).andReturn(builder);
-    EasyMock.expect(builder.addContactPoint(EasyMock.anyString())).andReturn(builder);
-    EasyMock.expect(builder.build()).andReturn(cluster);
-    EasyMock.expect(cluster.connect(EasyMock.anyString())).andReturn(session);
-
     manager = PowerMockito.mock(MappingManager.class);
-    PowerMockito.whenNew(MappingManager.class).withAnyArguments().thenReturn(manager);
 
     Mapper<SongsByUserDto> mySongsByUserMapper = PowerMockito.mock(Mapper.class);
     PowerMockito.when(manager.mapper(SongsByUserDto.class)).thenReturn(mySongsByUserMapper);
@@ -77,13 +64,14 @@ public class CassandraAccountServiceTest {
     PowerMockito.mockStatic(SongsByUserQuery.class);
     PowerMockito.mockStatic(AlbumsByUserQuery.class);
     PowerMockito.mockStatic(ArtistsByUserQuery.class);
+
+    accountDataClientService = new AccountDataClientServiceImpl(manager);
   }
 
   @Test
   public void testAddOrUpdateUser() {
     PowerMock.replayAll();
-    cassandraAccountService = CassandraAccountService.getInstance();
-    Observable<Void> results = cassandraAccountService.addOrUpdateUser(tc.USER_DTO);
+    Observable<Void> results = accountDataClientService.addOrUpdateUser(tc.USER_DTO);
     assertTrue(results.isEmpty().toBlocking().first());
   }
 
@@ -93,16 +81,14 @@ public class CassandraAccountServiceTest {
         UserQuery.get(Mockito.any(QueryAccessor.class), Mockito.any(MappingManager.class),
             Mockito.eq(tc.USERNAME))).thenReturn(Optional.of(tc.USER_DTO));
     PowerMock.replayAll();
-    cassandraAccountService = CassandraAccountService.getInstance();
-    Observable<UserDto> results = cassandraAccountService.getUserByUsername(tc.USERNAME);
+    Observable<UserDto> results = accountDataClientService.getUserByUsername(tc.USERNAME);
     assertEquals(results.toBlocking().first(), tc.USER_DTO);
   }
 
   @Test
   public void testDeleteUser() {
     PowerMock.replayAll();
-    cassandraAccountService = CassandraAccountService.getInstance();
-    Observable<Void> results = cassandraAccountService.deleteUser(tc.USERNAME);
+    Observable<Void> results = accountDataClientService.deleteUser(tc.USERNAME);
     assertTrue(results.isEmpty().toBlocking().first());
   }
 
@@ -115,8 +101,7 @@ public class CassandraAccountServiceTest {
   @Test
   public void testAddOrUpdateSongsByUser() {
     PowerMock.replayAll();
-    cassandraAccountService = CassandraAccountService.getInstance();
-    Observable<Void> results = cassandraAccountService.addOrUpdateSongsByUser(tc.SONGS_BY_USER_DTO);
+    Observable<Void> results = accountDataClientService.addOrUpdateSongsByUser(tc.SONGS_BY_USER_DTO);
     assertTrue(results.isEmpty().toBlocking().first());
   }
 
@@ -128,9 +113,8 @@ public class CassandraAccountServiceTest {
             Mockito.eq(tc.TIMESTAMP.toString()), Mockito.eq(tc.SONG_ID))).thenReturn(
         Optional.of(tc.SONGS_BY_USER_DTO));
     PowerMock.replayAll();
-    cassandraAccountService = CassandraAccountService.getInstance();
     Observable<SongsByUserDto> results =
-        cassandraAccountService.getSongsByUser(tc.USER_ID, tc.TIMESTAMP.toString(), tc.SONG_ID);
+        accountDataClientService.getSongsByUser(tc.USER_ID, tc.TIMESTAMP.toString(), tc.SONG_ID);
     assertEquals(results.toBlocking().first(), tc.SONGS_BY_USER_DTO);
   }
 
@@ -141,9 +125,8 @@ public class CassandraAccountServiceTest {
             Mockito.eq(Optional.of(tc.TIMESTAMP.toString())), Mockito.eq(Optional.of(tc.LIMIT))))
         .thenReturn(resultSet);
     PowerMock.replayAll();
-    cassandraAccountService = CassandraAccountService.getInstance();
     Observable<ResultSet> results =
-        cassandraAccountService.getSongsByUser(tc.USER_ID, Optional.of(tc.TIMESTAMP.toString()),
+        accountDataClientService.getSongsByUser(tc.USER_ID, Optional.of(tc.TIMESTAMP.toString()),
             Optional.of(tc.LIMIT));
     assertEquals(results.toBlocking().first(), resultSet);
   }
@@ -151,18 +134,16 @@ public class CassandraAccountServiceTest {
   @Test
   public void testMapSongsByUser() {
     PowerMock.replayAll();
-    cassandraAccountService = CassandraAccountService.getInstance();
     Observable<Result<SongsByUserDto>> results =
-        cassandraAccountService.mapSongsByUser(Observable.just(resultSet));
+        accountDataClientService.mapSongsByUser(Observable.just(resultSet));
     assertNull(results.toBlocking().first());
   }
 
   @Test
   public void testDeleteSongByUser() {
     PowerMock.replayAll();
-    cassandraAccountService = CassandraAccountService.getInstance();
     Observable<Void> results =
-        cassandraAccountService.deleteSongsByUser(tc.USER_ID, tc.TIMESTAMP, tc.SONG_ID);
+        accountDataClientService.deleteSongsByUser(tc.USER_ID, tc.TIMESTAMP, tc.SONG_ID);
     assertTrue(results.isEmpty().toBlocking().first());
   }
 
@@ -174,9 +155,8 @@ public class CassandraAccountServiceTest {
   @Test
   public void testAddOrUpdateAlbumsByUser() {
     PowerMock.replayAll();
-    cassandraAccountService = CassandraAccountService.getInstance();
     Observable<Void> results =
-        cassandraAccountService.addOrUpdateAlbumsByUser(tc.ALBUM_BY_USER_DTO);
+        accountDataClientService.addOrUpdateAlbumsByUser(tc.ALBUM_BY_USER_DTO);
     assertTrue(results.isEmpty().toBlocking().first());
   }
 
@@ -188,9 +168,8 @@ public class CassandraAccountServiceTest {
             Mockito.eq(tc.TIMESTAMP.toString()), Mockito.eq(tc.ALBUM_ID))).thenReturn(
         Optional.of(tc.ALBUM_BY_USER_DTO));
     PowerMock.replayAll();
-    cassandraAccountService = CassandraAccountService.getInstance();
     Observable<AlbumsByUserDto> results =
-        cassandraAccountService.getAlbumsByUser(tc.USER_ID, tc.TIMESTAMP.toString(), tc.ALBUM_ID);
+        accountDataClientService.getAlbumsByUser(tc.USER_ID, tc.TIMESTAMP.toString(), tc.ALBUM_ID);
     assertEquals(results.toBlocking().first(), tc.ALBUM_BY_USER_DTO);
   }
 
@@ -201,9 +180,8 @@ public class CassandraAccountServiceTest {
             Mockito.eq(tc.USER_ID), Mockito.eq(Optional.of(tc.TIMESTAMP.toString())),
             Mockito.eq(Optional.of(tc.LIMIT)))).thenReturn(resultSet);
     PowerMock.replayAll();
-    cassandraAccountService = CassandraAccountService.getInstance();
     Observable<ResultSet> results =
-        cassandraAccountService.getAlbumsByUser(tc.USER_ID, Optional.of(tc.TIMESTAMP.toString()),
+        accountDataClientService.getAlbumsByUser(tc.USER_ID, Optional.of(tc.TIMESTAMP.toString()),
             Optional.of(tc.LIMIT));
     assertEquals(results.toBlocking().first(), resultSet);
   }
@@ -211,18 +189,16 @@ public class CassandraAccountServiceTest {
   @Test
   public void testMapAlbumsByUser() {
     PowerMock.replayAll();
-    cassandraAccountService = CassandraAccountService.getInstance();
     Observable<Result<AlbumsByUserDto>> results =
-        cassandraAccountService.mapAlbumsByUser(Observable.just(resultSet));
+        accountDataClientService.mapAlbumsByUser(Observable.just(resultSet));
     assertNull(results.toBlocking().first());
   }
 
   @Test
   public void testDeleteAlbumsByUser() {
     PowerMock.replayAll();
-    cassandraAccountService = CassandraAccountService.getInstance();
     Observable<Void> results =
-        cassandraAccountService.deleteAlbumsByUser(tc.USER_ID, tc.TIMESTAMP, tc.ALBUM_ID);
+        accountDataClientService.deleteAlbumsByUser(tc.USER_ID, tc.TIMESTAMP, tc.ALBUM_ID);
     assertTrue(results.isEmpty().toBlocking().first());
   }
 
@@ -234,9 +210,8 @@ public class CassandraAccountServiceTest {
   @Test
   public void testAddOrUpdateArtistsByUser() {
     PowerMock.replayAll();
-    cassandraAccountService = CassandraAccountService.getInstance();
     Observable<Void> results =
-        cassandraAccountService.addOrUpdateArtistsByUser(tc.ARTIST_BY_USER_DTO);
+        accountDataClientService.addOrUpdateArtistsByUser(tc.ARTIST_BY_USER_DTO);
     assertTrue(results.isEmpty().toBlocking().first());
   }
 
@@ -248,9 +223,8 @@ public class CassandraAccountServiceTest {
             Mockito.eq(tc.TIMESTAMP.toString()), Mockito.eq(tc.ARTIST_ID))).thenReturn(
         Optional.of(tc.ARTIST_BY_USER_DTO));
     PowerMock.replayAll();
-    cassandraAccountService = CassandraAccountService.getInstance();
     Observable<ArtistsByUserDto> results =
-        cassandraAccountService.getArtistsByUser(tc.USER_ID, tc.TIMESTAMP.toString(), tc.ARTIST_ID);
+        accountDataClientService.getArtistsByUser(tc.USER_ID, tc.TIMESTAMP.toString(), tc.ARTIST_ID);
     assertEquals(results.toBlocking().first(), tc.ARTIST_BY_USER_DTO);
   }
 
@@ -261,9 +235,8 @@ public class CassandraAccountServiceTest {
             Mockito.eq(tc.USER_ID), Mockito.eq(Optional.of(tc.TIMESTAMP.toString())),
             Mockito.eq(Optional.of(tc.LIMIT)))).thenReturn(resultSet);
     PowerMock.replayAll();
-    cassandraAccountService = CassandraAccountService.getInstance();
     Observable<ResultSet> results =
-        cassandraAccountService.getArtistsByUser(tc.USER_ID, Optional.of(tc.TIMESTAMP.toString()),
+        accountDataClientService.getArtistsByUser(tc.USER_ID, Optional.of(tc.TIMESTAMP.toString()),
             Optional.of(tc.LIMIT));
     assertEquals(results.toBlocking().first(), resultSet);
   }
@@ -271,18 +244,16 @@ public class CassandraAccountServiceTest {
   @Test
   public void testMapArtistByUser() {
     PowerMock.replayAll();
-    cassandraAccountService = CassandraAccountService.getInstance();
     Observable<Result<ArtistsByUserDto>> results =
-        cassandraAccountService.mapArtistByUser(Observable.just(resultSet));
+        accountDataClientService.mapArtistByUser(Observable.just(resultSet));
     assertNull(results.toBlocking().first());
   }
 
   @Test
   public void testDeleteArtistByUser() {
     PowerMock.replayAll();
-    cassandraAccountService = CassandraAccountService.getInstance();
     Observable<Void> results =
-        cassandraAccountService.deleteArtistsByUser(tc.USER_ID, tc.TIMESTAMP, tc.ARTIST_ID);
+        accountDataClientService.deleteArtistsByUser(tc.USER_ID, tc.TIMESTAMP, tc.ARTIST_ID);
     assertTrue(results.isEmpty().toBlocking().first());
   }
 

@@ -4,8 +4,10 @@
 package com.kenzan.msl.account.client.services;
 
 import com.datastax.driver.core.ResultSet;
+import com.datastax.driver.mapping.MappingManager;
 import com.datastax.driver.mapping.Result;
 import com.google.common.base.Optional;
+import com.kenzan.msl.account.client.cassandra.QueryAccessor;
 import com.kenzan.msl.account.client.dto.ArtistsByUserDto;
 import com.kenzan.msl.account.client.dto.UserDto;
 import com.kenzan.msl.account.client.dto.AlbumsByUserDto;
@@ -15,7 +17,7 @@ import rx.Observable;
 import java.util.Date;
 import java.util.UUID;
 
-public interface AccountService {
+public interface AccountDataClientService {
 
   Observable<Void> addOrUpdateUser(UserDto user);
 
@@ -67,4 +69,11 @@ public interface AccountService {
   Observable<Result<ArtistsByUserDto>> mapArtistByUser(Observable<ResultSet> object);
 
   Observable<Void> deleteArtistsByUser(UUID userId, Date timestamp, UUID artistUuid);
+
+  /* MISC ===================================================== */
+  /* ========================================================== */
+
+  QueryAccessor getQueryAccessor ();
+
+  MappingManager getMappingManager ();
 }
