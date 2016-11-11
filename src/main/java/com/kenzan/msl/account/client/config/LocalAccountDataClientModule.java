@@ -7,7 +7,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.kenzan.msl.account.client.services.AccountDataClientService;
-import com.kenzan.msl.account.client.services.AccountDataClientServiceStub;
+import com.kenzan.msl.account.client.services.AccountDataClientServiceImpl;
 import com.netflix.config.DynamicPropertyFactory;
 import com.netflix.config.DynamicStringProperty;
 import org.codehaus.plexus.util.StringUtils;
@@ -34,7 +34,7 @@ public class LocalAccountDataClientModule extends AbstractModule {
 
   @Override
   protected void configure() {
-    bind(AccountDataClientService.class).to(AccountDataClientServiceStub.class).asEagerSingleton();
+    bind(AccountDataClientService.class).to(AccountDataClientServiceImpl.class).asEagerSingleton();
   }
 
   @Provides
