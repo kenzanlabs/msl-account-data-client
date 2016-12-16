@@ -1,3 +1,4 @@
+
 package com.kenzan.msl.account.client.services;
 
 import com.datastax.driver.core.ResultSet;
@@ -114,5 +115,9 @@ public class AccountDataClientServiceStub implements AccountDataClientService {
 
   public Observable<Void> deleteArtistsByUser(UUID userId, Date timestamp, UUID artistUuid) {
     return Observable.empty();
+  }
+
+  public String hashPassword(String password_plaintext) {
+    return "";
   }
 }

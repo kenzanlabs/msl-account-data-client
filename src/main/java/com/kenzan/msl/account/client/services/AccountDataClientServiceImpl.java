@@ -17,6 +17,9 @@ import com.kenzan.msl.account.client.dto.AlbumsByUserDto;
 import com.kenzan.msl.account.client.dto.ArtistsByUserDto;
 import com.kenzan.msl.account.client.dto.SongsByUserDto;
 import com.kenzan.msl.account.client.dto.UserDto;
+import com.netflix.config.DynamicIntProperty;
+import com.netflix.config.DynamicPropertyFactory;
+import org.mindrot.jbcrypt.BCrypt;
 import rx.Observable;
 
 import java.util.Date;
@@ -30,6 +33,10 @@ public class AccountDataClientServiceImpl implements AccountDataClientService {
 
   private QueryAccessor queryAccessor;
   private MappingManager mappingManager;
+
+  private static final int DEFAULT_HASH_WORKLOAD = 12;
+  private static DynamicIntProperty workload = DynamicPropertyFactory.getInstance().getIntProperty("hash_workload", DEFAULT_HASH_WORKLOAD);
+
 
   @Inject
   public AccountDataClientServiceImpl (final MappingManager mappingManager) {
@@ -48,8 +55,17 @@ public class AccountDataClientServiceImpl implements AccountDataClientService {
    * @param user UserDto
    */
   public Observable<Void> addOrUpdateUser(UserDto user) {
+
+    String tmpPassword = user.getPassword();
+    user.setPassword(hashPassword(tmpPassword));
     UserQuery.add(queryAccessor, user);
     return Observable.empty();
+  }
+
+  public String hashPassword(String passwordPlaintext) {
+    String salt = BCrypt.gensalt(workload.getValue());
+    String hashedPassword = BCrypt.hashpw(passwordPlaintext, salt);
+    return hashedPassword;
   }
 
   /**

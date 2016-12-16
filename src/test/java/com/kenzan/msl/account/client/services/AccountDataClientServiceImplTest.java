@@ -1,3 +1,5 @@
+AccountDataClientServiceImplTest
+
 package com.kenzan.msl.account.client.services;
 
 import com.datastax.driver.core.Cluster;
@@ -29,6 +31,7 @@ import rx.Observable;
 
 import static org.easymock.EasyMock.createMock;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -255,6 +258,14 @@ public class AccountDataClientServiceImplTest {
     Observable<Void> results =
         accountDataClientService.deleteArtistsByUser(tc.USER_ID, tc.TIMESTAMP, tc.ARTIST_ID);
     assertTrue(results.isEmpty().toBlocking().first());
+  }
+
+  @Test
+  public void testHashPassword() {
+    PowerMock.replayAll();
+    String password = "password";
+    String hashed = accountDataClientService.hashPassword(password);
+    assertNotSame(password, hashed);
   }
 
 }

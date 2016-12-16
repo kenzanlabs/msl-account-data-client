@@ -76,4 +76,6 @@ public interface AccountDataClientService {
   QueryAccessor getQueryAccessor ();
 
   MappingManager getMappingManager ();
+
+  String hashPassword(String password_plaintext);
 }
